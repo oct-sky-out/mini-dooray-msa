@@ -2,21 +2,23 @@ package com.nhnacademy.minidooraygateway.security.provider;
 
 import com.nhnacademy.minidooraygateway.security.dto.UserPasswordDto;
 import com.nhnacademy.minidooraygateway.security.dto.UserPasswordRequest;
-import java.util.Objects;
 import java.util.Optional;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
 public class CustomDaoAuthenticationProvider extends DaoAuthenticationProvider {
     private final RestTemplate restTemplate;
+    private final PasswordEncoder passwordEncoder;
 
-    public CustomDaoAuthenticationProvider(RestTemplate restTemplate) {
+    public CustomDaoAuthenticationProvider(RestTemplate restTemplate,
+                                           PasswordEncoder passwordEncoder) {
         this.restTemplate = restTemplate;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -29,7 +31,7 @@ public class CustomDaoAuthenticationProvider extends DaoAuthenticationProvider {
                     String password = credentials.toString();
                     UserPasswordDto userPassword = getPasswordFromUserApiServer(userDetails);
 
-                    if(!Objects.equals(userPassword, password)) {
+                    if(passwordEncoder.matches(password, userPassword.getPassword())) {
                         throw new BadCredentialsException(this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "로그인정보가 올바르지않음."));
                     }
                 },
@@ -46,8 +48,7 @@ public class CustomDaoAuthenticationProvider extends DaoAuthenticationProvider {
         return restTemplate.postForEntity(
             "http://localhost:8082/users",
             requestBody,
-            UserPasswordDto.class
-            )
+            UserPasswordDto.class)
             .getBody();
     }
 }
