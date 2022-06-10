@@ -1,5 +1,7 @@
 package com.nhnacademy.minidoorayuserapi.user.dto;
 
+import com.nhnacademy.minidoorayuserapi.user.entity.UserStatus;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
@@ -12,5 +14,5 @@ public class UserDetailsDto {
 
     private String email;
 
-    private String status;
+    private UserStatus status;
 }

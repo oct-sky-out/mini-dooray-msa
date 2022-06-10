@@ -4,7 +4,17 @@ import lombok.ToString;
 
 @ToString
 public enum UserStatus {
-    JOINED,
-    LEAVED,
-    DORMANT
+    JOINED("JOINED"),
+    LEAVED("LEAVED"),
+    DORMANT("DORMANT");
+
+    private String state;
+
+    UserStatus(String state) {
+        this.state = state;
+    }
+
+    public String getState() {
+        return state;
+    }
 }

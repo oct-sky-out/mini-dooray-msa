@@ -39,12 +39,10 @@ public class User {
     private String email;
 
     @Enumerated(value = EnumType.STRING)
-    @ColumnDefault("JOINED")
     @Column(name = "user_status")
-    private UserStatus stats;
+    private UserStatus status;
 
     @Column(name = "created_at")
-    @ColumnDefault("NOW()")
     private LocalDateTime createdAt;
 
     @Override
