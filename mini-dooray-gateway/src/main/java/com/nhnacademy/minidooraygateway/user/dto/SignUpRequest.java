@@ -1,12 +1,12 @@
 package com.nhnacademy.minidooraygateway.user.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @AllArgsConstructor
-@EqualsAndHashCode
+@NoArgsConstructor
 public class SignUpRequest {
     private String id;
     private String password;

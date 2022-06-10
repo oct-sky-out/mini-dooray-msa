@@ -5,17 +5,21 @@ import com.nhnacademy.minidooraygateway.security.provider.CustomDaoAuthenticatio
 import com.nhnacademy.minidooraygateway.security.provider.CustomSessionAuthenticationStrategy;
 import com.nhnacademy.minidooraygateway.security.service.CustomUserDetailService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.web.client.RestTemplate;
@@ -27,44 +31,57 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .anyRequest().permitAll()
-            .and()
-            .formLogin()
-                .loginPage("/login")
+            .anyRequest().permitAll()
+            .and();
+
+        http.sessionManagement(httpSecuritySessionManagementConfigurer ->
+                httpSecuritySessionManagementConfigurer.sessionCreationPolicy(
+                    SessionCreationPolicy.ALWAYS))
+            .sessionManagement()
+                .sessionFixation().none()
+                .sessionAuthenticationStrategy(customSessionAuthenticationStrategy(null))
+            .and();
+
+        http.oauth2Login()
+                .defaultSuccessUrl("/")
+                .successHandler(loginSuccessHandler(null))
+            .and();
+
+        http.formLogin()
+                .loginPage("/signIn")
                 .usernameParameter("id")
                 .passwordParameter("pw")
                 .defaultSuccessUrl("/")
                 .successHandler(loginSuccessHandler(null))
                 .loginProcessingUrl("/login")
+            .and();
+
+        http.logout()
+            .clearAuthentication(true)
+            .invalidateHttpSession(true)
+            .deleteCookies("JSESSIONID")
+            .and();
+
+        http.csrf()
+            .disable();
+
+        http.headers()
+                .defaultsDisabled()
+                .contentTypeOptions()
             .and()
-            .logout()
-                .clearAuthentication(true)
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
+                .cacheControl()
             .and()
-                .csrf()
-                .disable()
-                .sessionManagement()
-                .sessionFixation().none()
-                .sessionAuthenticationStrategy(customSessionAuthenticationStrategy(null))
+                .xssProtection().block(true)
             .and()
-                .headers()
-                    .defaultsDisabled()
-                        .contentTypeOptions()
-                    .and()
-                        .cacheControl()
-                    .and()
-                        .xssProtection().block(true)
-                    .and()
-                        .frameOptions()
-                            .sameOrigin()
+                .frameOptions().sameOrigin()
             .and()
-            .exceptionHandling()
-                .accessDeniedPage("/error/403")
+                .exceptionHandling().accessDeniedPage("/error/403")
             .and();
     }
 
-    public AuthenticationSuccessHandler loginSuccessHandler(@Autowired RedisTemplate<String, String> redisTemplate) {
+    @Bean
+    public AuthenticationSuccessHandler loginSuccessHandler(
+        RedisTemplate<String, String> redisTemplate) {
         return new LoginSuccessHandler(redisTemplate);
     }
 
@@ -72,10 +89,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authenticationProvider(null, null));
     }
 
-    public AuthenticationProvider authenticationProvider(@Autowired CustomUserDetailService customUserDetailService,
-                                                         @Autowired RestTemplate restTemplate) {
-        CustomDaoAuthenticationProvider customDaoAuthenticationProvider =
-            new CustomDaoAuthenticationProvider(restTemplate);
+    @Bean
+    public AuthenticationProvider authenticationProvider(
+        CustomUserDetailService customUserDetailService,
+        RestTemplate restTemplate) {
+        DaoAuthenticationProvider customDaoAuthenticationProvider =
+            new CustomDaoAuthenticationProvider(restTemplate, passwordEncoder());
         customDaoAuthenticationProvider.setUserDetailsService(customUserDetailService);
         customDaoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
 
@@ -87,7 +106,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    public SessionAuthenticationStrategy customSessionAuthenticationStrategy(@Autowired RedisTemplate<String, String> redisTemplate) {
+    @Bean
+    public SessionAuthenticationStrategy customSessionAuthenticationStrategy(
+        RedisTemplate<String, String> redisTemplate) {
         return new CustomSessionAuthenticationStrategy(redisTemplate);
+    }
+
+    @Bean
+    public ClientRegistration githubLogin() {
+        return CommonOAuth2Provider.GITHUB.getBuilder("github")
+            .userNameAttributeName("email")
+            .clientId("39249c7a9019cd6ab51a")
+            .redirectUri("{baseUrl}/login/oauth2/code/github")
+            .clientSecret("993f21e34413ebf5aa25d26fb79da2299f2b6009")
+            .scope("user")
+            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+            .build();
     }
 }

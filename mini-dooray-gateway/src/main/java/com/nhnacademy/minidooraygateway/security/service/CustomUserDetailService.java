@@ -30,7 +30,8 @@ public class CustomUserDetailService implements UserDetailsService {
             "http://localhost:8082/users/{userId}",
             HttpMethod.GET,
             httpEntity,
-            CustomUserDerailsResponse.class)
+            CustomUserDerailsResponse.class,
+            username)
             .getBody();
     }
 }

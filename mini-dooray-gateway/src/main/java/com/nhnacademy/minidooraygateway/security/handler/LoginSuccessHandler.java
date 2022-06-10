@@ -3,7 +3,9 @@ package com.nhnacademy.minidooraygateway.security.handler;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Objects;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -34,8 +36,14 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         HttpSession session = request.getSession(false);
         session.setAttribute("userId", userDetails.getUsername());
 
+        Cookie cookie = new Cookie("SESSION", session.getId());
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(259200);
+        cookie.setDomain("/");
+        response.addCookie(cookie);
+
         redisTemplate.opsForHash().put(session.getId(), "userId", userDetails.getUsername());
-        redisTemplate.opsForHash().put(session.getId(), "authority", authorities.get(0));
+        redisTemplate.opsForHash().put(session.getId(), "authority", authorities.get(0).getAuthority());
         redisTemplate.boundHashOps(session.getId()).expire(Duration.ofDays(3));
     }
 }
