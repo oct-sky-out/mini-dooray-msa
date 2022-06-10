@@ -1,14 +1,23 @@
 package com.nhnacademy.minidoorayuserapi.user.controller;
 
+import com.nhnacademy.minidoorayuserapi.user.dto.UserDetailsDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserPasswordDto;
+import com.nhnacademy.minidoorayuserapi.user.dto.UserPasswordRequest;
+import com.nhnacademy.minidoorayuserapi.user.dto.UserSignUpRequest;
 import com.nhnacademy.minidoorayuserapi.user.service.UserService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
+@Slf4j
 public class UserController {
     private final UserService userService;
 
@@ -16,8 +25,18 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/{userId}/password")
-    public UserPasswordDto existPassword(@PathVariable("userId") String userId){
-        return null;
+    @GetMapping("/{id}")
+    public UserDetailsDto existPassword(@PathVariable("id") String userId){
+        return userService.findUserDetailsByUserId(userId);
+    }
+
+    @PostMapping
+    public UserPasswordDto existPassword(UserPasswordRequest requestBody){
+        return userService.findUserPassword(requestBody.getUserId());
+    }
+
+    @PostMapping("/signUp")
+    public UserSignUpRequest signUp(@Validated @RequestBody UserSignUpRequest signUpRequest){
+        return userService.signUp(signUpRequest);
     }
 }
