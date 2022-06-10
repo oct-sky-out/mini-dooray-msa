@@ -26,28 +26,27 @@ import org.hibernate.annotations.ColumnDefault;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_no", nullable = false)
+    @Column(name = "user_no")
     private Long userNo;
 
-    @Column(name = "id", nullable = false, length = 50)
+    @Column(name = "id", length = 50)
     private String id;
 
-    @Column(name = "password", nullable = false, length = 100)
+    @Column(name = "password", length = 100)
     private String password;
 
-    @Column(name = "email", nullable = false, length = 100)
+    @Column(name = "email", length = 100)
     private String email;
 
     @Enumerated(value = EnumType.STRING)
     @ColumnDefault("JOINED")
-    @Column(name = "user_status", nullable = false)
-    private UserStatus status;
+    @Column(name = "user_status")
+    private UserStatus stats;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     @ColumnDefault("NOW()")
     private LocalDateTime createdAt;
 
-    // Lombok의 EqualsAndHashCode는 메모리 누수를 야기함.
     @Override
     public boolean equals(Object o) {
         if (this == o) {
