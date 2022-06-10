@@ -5,6 +5,7 @@ import com.nhnacademy.minidoorayuserapi.user.dto.UserPasswordDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserSignUpRequest;
 import com.nhnacademy.minidoorayuserapi.user.entity.User;
 import com.nhnacademy.minidoorayuserapi.exceptions.UserNotFoundException;
+import com.nhnacademy.minidoorayuserapi.user.entity.UserStatus;
 import com.nhnacademy.minidoorayuserapi.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,7 @@ public class UserService {
     }
 
     public UserDetailsDto findUserDetailsByUserId (String userId){
-        return userRepository.findUserDetailsByUserId(userId)
+        return userRepository.findUserDetailsById(userId)
             .orElseThrow(() -> new UserNotFoundException("사용자 정보를 찾지 못하였습니다."));
     }
 
@@ -37,6 +38,7 @@ public class UserService {
             .email(signUpRequest.getEmail())
             .password(signUpRequest.getPassword())
             .createdAt(LocalDateTime.now())
+            .status(UserStatus.JOINED)
             .build();
 
         userRepository.save(user);

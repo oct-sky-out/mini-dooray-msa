@@ -25,10 +25,10 @@ public class UserRepositoryImpl extends QuerydslRepositorySupport implements Use
     }
 
     @Override
-    public Optional<UserDetailsDto> findUserDetailsByUserId(String userId) {
+    public Optional<UserDetailsDto> findUserDetailsById(String userId) {
         QUser user = QUser.user;
 
-        return Optional.ofNullable(from(user)
+        UserDetailsDto userDetailsDto = from(user)
             .where(user.id.eq(userId))
             .select(Projections.bean(UserDetailsDto.class,
                 user.userNo,
@@ -36,7 +36,8 @@ public class UserRepositoryImpl extends QuerydslRepositorySupport implements Use
                 user.password,
                 user.email,
                 user.status))
-            .fetchOne()
-        );
+            .fetchOne();
+
+        return Optional.ofNullable(userDetailsDto);
     }
 }

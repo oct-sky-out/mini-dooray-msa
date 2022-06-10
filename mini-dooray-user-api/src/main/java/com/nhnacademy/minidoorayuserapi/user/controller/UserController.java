@@ -7,7 +7,6 @@ import com.nhnacademy.minidoorayuserapi.user.dto.UserSignUpRequest;
 import com.nhnacademy.minidoorayuserapi.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,12 +27,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserDetailsDto existPassword(@PathVariable("id") String userId){
+    public UserDetailsDto findUserDetails(@PathVariable("id") String userId){
         return userService.findUserDetailsByUserId(userId);
     }
 
     @PostMapping
-    public UserPasswordDto existPassword(UserPasswordRequest requestBody){
+    public UserPasswordDto existPassword(@RequestBody UserPasswordRequest requestBody){
         return userService.findUserPassword(requestBody.getUserId());
     }
 

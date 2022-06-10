@@ -7,11 +7,14 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.nhnacademy.minidoorayuserapi.user.dto.UserDetailsDto;
+import com.nhnacademy.minidoorayuserapi.user.dto.UserPasswordDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserSignUpRequest;
 import com.nhnacademy.minidoorayuserapi.user.entity.User;
 import com.nhnacademy.minidoorayuserapi.user.entity.UserStatus;
 import com.nhnacademy.minidoorayuserapi.user.repository.UserRepository;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,10 +33,31 @@ class UserServiceTest {
 
     @Test
     void findUserPassword() {
+        UserPasswordDto passwordDto = new UserPasswordDto();
+        passwordDto.setPassword("password");
+        given(userRepository.findPasswordByUserId("id"))
+            .willReturn(Optional.of(passwordDto));
+
+        assertThat(userService.findUserPassword("id").getPassword())
+            .isEqualTo(passwordDto.getPassword());
     }
 
     @Test
     void findUserDetailsByUserId() {
+        UserDetailsDto userDetailsDto = new UserDetailsDto();
+        userDetailsDto.setUserNo(1L);
+        userDetailsDto.setId("id");
+        userDetailsDto.setPassword("password");
+        userDetailsDto.setEmail("email@email.nhn");
+        userDetailsDto.setStatus(UserStatus.DORMANT);
+
+        given(userRepository.findUserDetailsById("id"))
+            .willReturn(Optional.of(userDetailsDto));
+
+        UserDetailsDto searched = userService.findUserDetailsByUserId("id");
+        assertThat(searched.getId()).isEqualTo("id");
+        assertThat(searched.getPassword()).isEqualTo("password");
+        assertThat(searched.getStatus()).isEqualTo(UserStatus.DORMANT);
     }
 
     @Test

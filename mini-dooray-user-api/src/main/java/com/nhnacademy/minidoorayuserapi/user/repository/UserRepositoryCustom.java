@@ -9,5 +9,5 @@ import org.springframework.data.repository.NoRepositoryBean;
 public interface UserRepositoryCustom {
     Optional<UserPasswordDto> findPasswordByUserId(String id);
 
-    Optional<UserDetailsDto> findUserDetailsByUserId (String userId);
+    Optional<UserDetailsDto> findUserDetailsById (String userId);
 }
