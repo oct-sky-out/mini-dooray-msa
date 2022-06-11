@@ -1,0 +1,8 @@
+###
+PATCH http://localhost:8081/projects/100/status
+Content-Type: application/json
+
+{
+  "projectNo": 1000,
+  "projectStatus": "END"
+}

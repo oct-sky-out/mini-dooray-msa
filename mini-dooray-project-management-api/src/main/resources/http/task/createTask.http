@@ -1,0 +1,10 @@
+###
+POST http://localhost:8081/projects/7/tasks
+Content-Type: application/json
+
+{
+  "projectNo": 1000,
+  "authorNo": 100,
+  "title": "tit",
+  "content": "cont"
+}

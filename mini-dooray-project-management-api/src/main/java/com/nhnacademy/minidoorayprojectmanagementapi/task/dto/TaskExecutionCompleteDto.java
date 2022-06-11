@@ -1,5 +1,6 @@
 package com.nhnacademy.minidoorayprojectmanagementapi.task.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nhnacademy.minidoorayprojectmanagementapi.milestone.entity.MileStone;
 import java.time.LocalDateTime;
 import lombok.Builder;
@@ -19,6 +20,7 @@ public class TaskExecutionCompleteDto {
     private String title;
 
     private String content;
-
+    
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 }
