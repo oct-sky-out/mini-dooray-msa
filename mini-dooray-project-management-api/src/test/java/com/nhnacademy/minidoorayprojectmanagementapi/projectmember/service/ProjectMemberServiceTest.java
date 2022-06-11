@@ -40,8 +40,9 @@ class ProjectMemberServiceTest {
         ProjectMember projectAdmin = getTestDummyProjectAdmin(projectMemberDto);
         Project project = getTestDummyProject(projectAdmin);
 
+
         ProjectMember projectMember = ProjectMember.builder()
-                .userNo(projectMemberDto.getUserNo())
+                .pk(new ProjectMember.Pk(projectMemberDto.getUserNo(), project.getProjectNo()))
                 .id(projectMemberDto.getUserId())
                 .project(project)
                 .build();

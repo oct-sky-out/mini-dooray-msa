@@ -1,6 +1,5 @@
 package com.nhnacademy.minidoorayprojectmanagementapi.projectmember.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

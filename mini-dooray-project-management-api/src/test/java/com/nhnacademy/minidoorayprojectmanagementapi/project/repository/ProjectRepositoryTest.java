@@ -23,22 +23,25 @@ class ProjectRepositoryTest {
 
     @Test
     void createProjectTest() {
-        ProjectMember projectMember = ProjectMember
-            .builder()
-            .userNo(1L)
-            .id("id")
-            .build();
 
         Project project = Project.builder()
             .name("project1")
-            .admin(projectMember)
             .status(ProjectStatus.ACTIVE)
             .createdAt(LocalDateTime.now())
             .build();
 
         Project savedProject = projectRepository.save(project);
 
-        projectMember.setProject(project);
+        ProjectMember.Pk pk = new ProjectMember.Pk();
+        pk.setUserNo(1L);
+
+        ProjectMember projectMember = ProjectMember
+            .builder()
+            .pk(pk)
+            .id("id")
+            .project(savedProject)
+            .build();
+
         projectMemberRepository.save(projectMember);
 
         assertThat(savedProject).isEqualTo(project);

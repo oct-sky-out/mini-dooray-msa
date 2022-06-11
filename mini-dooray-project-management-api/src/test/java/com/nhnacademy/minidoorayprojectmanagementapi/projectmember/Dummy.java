@@ -10,19 +10,20 @@ public class Dummy {
     private Dummy() {}
 
     public static ProjectMember getTestDummyProjectAdmin(ProjectMemberDto projectMemberDto) {
+        ProjectMember.Pk pk = new ProjectMember.Pk(projectMemberDto.getUserNo(),
+            projectMemberDto.getProjectNo());
+
         return ProjectMember.builder()
-            .userNo(projectMemberDto.getUserNo())
+            .pk(pk)
             .id(projectMemberDto.getUserId())
             .build();
     }
 
     public static Project getTestDummyProject(ProjectMember projectAdmin) {
-        Project project = Project.builder()
+        return Project.builder()
             .name("project1")
-            .admin(projectAdmin)
             .status(ProjectStatus.ACTIVE)
             .createdAt(LocalDateTime.now())
             .build();
-        return project;
     }
 }

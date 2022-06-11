@@ -3,10 +3,8 @@ package com.nhnacademy.minidoorayprojectmanagementapi.projectmember.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.Project;
-import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.ProjectStatus;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.repository.ProjectRepository;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity.ProjectMember;
-import java.time.LocalDateTime;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,23 +25,15 @@ class ProjectMemberRepositoryTest {
 
     @Test
     void addProjectMemberTest() {
-        ProjectMember projectAdmin = ProjectMember.builder()
-            .userNo(1L)
-            .id("user")
-            .build();
-
         Project project = Project.builder()
             .name("project1")
-            .admin(projectAdmin)
-            .status(ProjectStatus.ACTIVE)
-            .createdAt(LocalDateTime.now())
             .build();
-        projectAdmin.setProject(project);
-
         entityManager.persist(project);
 
+
+        ProjectMember.Pk pk = new ProjectMember.Pk(100L, project.getProjectNo());
         ProjectMember projectMember = ProjectMember.builder()
-            .userNo(2L)
+            .pk(pk)
             .id("user")
             .project(project)
             .build();
