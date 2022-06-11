@@ -1,0 +1,8 @@
+POST http://localhost:8081/projects/members
+Content-Type: application/json
+
+{
+  "userNo": 80,
+  "projectNo": 7,
+  "userId": "anonymous2"
+}
