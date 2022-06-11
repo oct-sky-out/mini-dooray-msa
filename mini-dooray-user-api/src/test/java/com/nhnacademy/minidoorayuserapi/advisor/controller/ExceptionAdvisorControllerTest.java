@@ -5,7 +5,6 @@ package com.nhnacademy.minidoorayuserapi.advisor.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.minidoorayuserapi.user.controller.UserController;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserSignUpRequest;

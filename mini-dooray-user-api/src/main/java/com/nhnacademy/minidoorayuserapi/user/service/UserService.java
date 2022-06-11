@@ -32,11 +32,11 @@ public class UserService {
     }
 
     @Transactional
-    public UserSignUpRequest signUp(UserSignUpRequest signUpRequest) {
-        User user = User.builder()
-            .id(signUpRequest.getId())
-            .email(signUpRequest.getEmail())
-            .password(signUpRequest.getPassword())
+        public UserSignUpRequest signUp(UserSignUpRequest signUpRequest) {
+            User user = User.builder()
+                .id(signUpRequest.getId())
+                .email(signUpRequest.getEmail())
+                .password(signUpRequest.getPassword())
             .createdAt(LocalDateTime.now())
             .status(UserStatus.JOINED)
             .build();

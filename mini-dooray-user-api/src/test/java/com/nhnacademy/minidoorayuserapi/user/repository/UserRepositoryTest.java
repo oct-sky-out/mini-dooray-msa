@@ -23,8 +23,6 @@ class UserRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
-
-
     @Test
     void userSignUpTest() {
         User user = User.builder()
