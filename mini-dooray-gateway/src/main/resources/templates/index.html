@@ -1,12 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Main page</title>
 </head>
 <body>
-<a href="/login"><h2>로그인하러가기</h2></a>
-<a href="/signUp"><h2>회원가입하러가기</h2></a>
-<a href="/logout"><h2>로그아웃하기</h2></a>
+<div th:insert="/components/header">
+
+</div>
+<th:blaock sec:authorize="isAuthenticated()">
+
+
+</th:blaock>
 </body>
 </html>
