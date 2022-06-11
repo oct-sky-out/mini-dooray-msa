@@ -1,6 +1,6 @@
 package com.nhnacademy.minidoorayprojectmanagementapi.projectmember.controller;
 
-import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.dto.projectmember.ProjectMemberDto;
+import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.dto.ProjectMemberDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.service.ProjectMemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;

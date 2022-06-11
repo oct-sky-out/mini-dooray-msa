@@ -11,8 +11,6 @@ import lombok.Data;
 public class ProjectExecutionCompleteDto {
     private Long projectNo;
 
-    private String adminId;
-
     private String name;
 
     private ProjectStatus status;

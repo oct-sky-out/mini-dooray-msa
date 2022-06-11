@@ -1,13 +1,18 @@
 package com.nhnacademy.minidoorayprojectmanagementapi.project.service;
 
+import com.nhnacademy.minidoorayprojectmanagementapi.exceptions.ProjectNotFoundException;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.CreationProjectRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectExecutionCompleteDto;
+import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectStatusModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.Project;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.ProjectStatus;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.repository.ProjectRepository;
+import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.dto.ProjectMemberDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity.ProjectMember;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.repository.ProjectMemberRepository;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +28,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectExecutionCompleteDto createProject(CreationProjectRequest projectRequest) {
+    public Map<String,Object> createProject(CreationProjectRequest projectRequest) {
         Project project = Project.builder()
             .name(projectRequest.getProjectName())
             .status(ProjectStatus.ACTIVE)
@@ -40,14 +45,33 @@ public class ProjectService {
             .id(projectRequest.getUserId())
             .isAdmin(false)
             .build();
-        ProjectMember savedAdmin = projectMemberRepository.saveAndFlush(projectMember);
+        ProjectMember admin = projectMemberRepository.saveAndFlush(projectMember);
+        ProjectMemberDto adminInfo = new ProjectMemberDto(admin.pk.getUserNo(), admin.getId(), admin.pk.getProjectNo());
 
-        return new ProjectExecutionCompleteDto(
+        Map<String, Object> result = new HashMap<>();
+        ProjectExecutionCompleteDto projectInfo = new ProjectExecutionCompleteDto(
             savedProject.getProjectNo(),
-            savedAdmin.getId(),
             savedProject.getName(),
             savedProject.getStatus(),
             savedProject.getCreatedAt()
-            );
+        );
+        result.put("project", projectInfo);
+        result.put("admin", adminInfo);
+
+        return result;
+    }
+
+    @Transactional
+    public ProjectExecutionCompleteDto modifyProjectStatus(ProjectStatusModifyRequest modifyRequest) {
+        projectRepository.updateProjectStatus(modifyRequest);
+        Project project = projectRepository.findById(modifyRequest.getProjectNo())
+            .orElseThrow(ProjectNotFoundException::new);
+
+        return new ProjectExecutionCompleteDto(
+            project.getProjectNo(),
+            project.getName(),
+            project.getStatus(),
+            project.getCreatedAt()
+        );
     }
 }

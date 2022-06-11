@@ -11,7 +11,10 @@ import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.CreationProject
 import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectExecutionCompleteDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.ProjectStatus;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.service.ProjectService;
+import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.dto.ProjectMemberDto;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -38,21 +41,28 @@ class ProjectControllerTest {
         ProjectExecutionCompleteDto projectExecutionCompleteDto =
             new ProjectExecutionCompleteDto(
                 1L,
-                "id",
                 projectRequest.getProjectName(),
                 ProjectStatus.ACTIVE,
                 LocalDateTime.now()
             );
+        ProjectMemberDto admin = new ProjectMemberDto(
+            projectRequest.getUserNo(),
+            projectRequest.getUserId(),
+            projectExecutionCompleteDto.getProjectNo());
 
-        given(projectService.createProject(projectRequest)).willReturn(projectExecutionCompleteDto);
+        Map<String, Object> result = new HashMap<>();
+        result.put("project", projectExecutionCompleteDto);
+        result.put("admin", admin);
+
+        given(projectService.createProject(projectRequest)).willReturn(result);
 
         mockMvc.perform(post("/projects")
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestBody))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.projectNo").value(equalTo(1)))
-            .andExpect(jsonPath("$.adminId").value(equalTo(projectExecutionCompleteDto.getAdminId())))
-            .andExpect(jsonPath("$.status").value(equalTo(projectExecutionCompleteDto.getStatus().getStatus())))
-            .andExpect(jsonPath("$.name").value(equalTo(projectExecutionCompleteDto.getName())));
+            .andExpect(jsonPath("$.project.projectNo").value(equalTo(1)))
+            .andExpect(jsonPath("$.admin.userId").value(equalTo(admin.getUserId())))
+            .andExpect(jsonPath("$.project.status").value(equalTo(projectExecutionCompleteDto.getStatus().getStatus())))
+            .andExpect(jsonPath("$.project.name").value(equalTo(projectExecutionCompleteDto.getName())));
     }
 }

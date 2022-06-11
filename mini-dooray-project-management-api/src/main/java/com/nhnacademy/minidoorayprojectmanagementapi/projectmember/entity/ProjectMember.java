@@ -46,6 +46,7 @@ public class ProjectMember {
     @AllArgsConstructor
     @NoArgsConstructor
     @EqualsAndHashCode
+    @Getter
     @Setter
     public static class Pk implements Serializable {
         @Column(name = "user_no")

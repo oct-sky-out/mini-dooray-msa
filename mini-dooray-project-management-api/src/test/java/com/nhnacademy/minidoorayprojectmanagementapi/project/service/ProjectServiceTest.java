@@ -4,6 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.CreationProjectRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectExecutionCompleteDto;
+import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectStatusModifyRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.ProjectStatus;
+import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.dto.ProjectMemberDto;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,9 +26,24 @@ class ProjectServiceTest {
         projectRequest.setUserId("id");
         projectRequest.setUserNo(1L);
 
-        ProjectExecutionCompleteDto saved = projectService.createProject(projectRequest);
+        Map<String, Object> saved = projectService.createProject(projectRequest);
 
-        assertThat(saved.getName()).isEqualTo(projectRequest.getProjectName());
-        assertThat(saved.getAdminId()).isEqualTo(projectRequest.getUserId());
+        ProjectExecutionCompleteDto executionCompleteDto =
+            (ProjectExecutionCompleteDto) saved.get("project");
+        ProjectMemberDto admin = (ProjectMemberDto) saved.get("admin");
+        assertThat(executionCompleteDto.getName()).isEqualTo(projectRequest.getProjectName());
+        assertThat(admin.getUserId()).isEqualTo(projectRequest.getUserId());
+    }
+
+    @Test
+    void modifyProjectStatusTest() {
+        ProjectStatusModifyRequest modifyRequest = new ProjectStatusModifyRequest();
+        modifyRequest.setProjectStatus(ProjectStatus.END);
+        modifyRequest.setProjectNo(7L);
+
+        ProjectExecutionCompleteDto executionCompleteDto = projectService.modifyProjectStatus(modifyRequest);
+
+        assertThat(executionCompleteDto.getProjectNo()).isEqualTo(modifyRequest.getProjectNo());
+        assertThat(executionCompleteDto.getStatus()).isEqualTo(modifyRequest.getProjectStatus());
     }
 }

@@ -3,6 +3,7 @@ package com.nhnacademy.minidoorayprojectmanagementapi.project.controller;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.CreationProjectRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectExecutionCompleteDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.service.ProjectService;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ public class ProjectController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProjectExecutionCompleteDto createProject(@Validated @RequestBody CreationProjectRequest projectRequest){
+    public Map<String, Object> createProject(@Validated @RequestBody CreationProjectRequest projectRequest){
         return projectService.createProject(projectRequest);
     }
 }
