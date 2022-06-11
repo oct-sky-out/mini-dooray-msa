@@ -1,17 +1,18 @@
 package com.nhnacademy.minidoorayprojectmanagementapi.projectmember.service;
 
+import static com.nhnacademy.minidoorayprojectmanagementapi.projectmember.Dummy.getTestDummyProject;
+import static com.nhnacademy.minidoorayprojectmanagementapi.projectmember.Dummy.getTestDummyProjectAdmin;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.Project;
-import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.ProjectStatus;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.repository.ProjectRepository;
+import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.Dummy;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.dto.projectmember.ProjectMemberDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity.ProjectMember;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.repository.ProjectMemberRepository;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,22 +59,5 @@ class ProjectMemberServiceTest {
 
         verify(projectRepository, times(1)).findById(projectMemberDto.getProjectNo());
         verify(projectMemberRepository, times(1)).save(projectMember);
-    }
-
-    private ProjectMember getTestDummyProjectAdmin(ProjectMemberDto projectMemberDto) {
-        return ProjectMember.builder()
-            .userNo(projectMemberDto.getUserNo())
-            .id(projectMemberDto.getUserId())
-            .build();
-    }
-
-    private Project getTestDummyProject(ProjectMember projectAdmin) {
-        Project project = Project.builder()
-            .name("project1")
-            .admin(projectAdmin)
-            .status(ProjectStatus.ACTIVE)
-            .createdAt(LocalDateTime.now())
-            .build();
-        return project;
     }
 }
