@@ -15,12 +15,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.PrimaryKeyJoinColumns;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.JoinColumnOrFormula;
+import org.hibernate.annotations.JoinColumnsOrFormulas;
+import org.hibernate.annotations.JoinFormula;
 
 @Entity
 @Table(name = "tasks")
@@ -38,12 +43,8 @@ public class Task {
     @JoinColumn(name = "project_no", nullable = false)
     private Project project;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumns({
-        @JoinColumn(name = "task_author_no", nullable = false, insertable = false, updatable = false),
-        @JoinColumn(name = "project_no", nullable = false, insertable = false, updatable = false)
-    })
-    private ProjectMember author;
+    @Column(name = "task_author_user_no")
+    private Long author;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "milestone_no", nullable = false)
