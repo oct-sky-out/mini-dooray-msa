@@ -19,7 +19,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "projects")
@@ -35,14 +34,13 @@ public class Project {
 
     @JoinColumn(name = "project_admin_no")
     @OneToOne(fetch = FetchType.LAZY)
-    private ProjectMember projectMember;
+    private ProjectMember admin;
 
     @Column(name = "project_name", length = 30)
     private String name;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "project_status")
-    @ColumnDefault("ACTIVE")
     private ProjectStatus status;
 
     @Column(name = "project_create_at")

@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.Hibernate;
 
 @Entity
@@ -24,12 +25,13 @@ import org.hibernate.Hibernate;
 @Getter
 public class ProjectMember {
     @Id
-    @Column(name = "user_no", nullable = false)
+    @Column(name = "user_no")
     private Long userNo;
 
     @MapsId
     @JoinColumn(name = "project_no")
     @ManyToOne(fetch = FetchType.LAZY)
+    @Setter
     private Project project;
 
     @Column(name = "id", length = 50)
