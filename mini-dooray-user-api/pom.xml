@@ -78,7 +78,7 @@
 				<configuration>
 					<processors>
 						<processor>
-						com.querydsl.apt.jpa.JPAAnnotationProcessor
+							com.querydsl.apt.jpa.JPAAnnotationProcessor
 						</processor>
 					</processors>
 				</configuration>

@@ -50,7 +50,7 @@ class ProjectMemberServiceTest {
         given(projectRepository.findById(projectMemberDto.getProjectNo()))
             .willReturn(Optional.of(project));
 
-        given(projectMemberRepository.save(projectMember))
+        given(projectMemberRepository.saveAndFlush(projectMember))
             .willReturn(projectMember);
 
         ProjectMemberDto result = projectMemberService.addProjectMember(projectMemberDto);
@@ -59,6 +59,6 @@ class ProjectMemberServiceTest {
         assertThat(result.getUserNo()).isEqualTo(projectMemberDto.getUserNo());
 
         verify(projectRepository, times(1)).findById(projectMemberDto.getProjectNo());
-        verify(projectMemberRepository, times(1)).save(projectMember);
+        verify(projectMemberRepository, times(1)).saveAndFlush(projectMember);
     }
 }
