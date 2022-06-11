@@ -30,7 +30,7 @@ import org.hibernate.annotations.ColumnDefault;
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "project_no", nullable = false)
+    @Column(name = "project_no")
     private Long projectNo;
 
     @JoinColumn(name = "project_admin_no")
