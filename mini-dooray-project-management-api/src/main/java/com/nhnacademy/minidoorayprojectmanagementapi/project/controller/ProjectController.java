@@ -2,10 +2,12 @@ package com.nhnacademy.minidoorayprojectmanagementapi.project.controller;
 
 import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.CreationProjectRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectExecutionCompleteDto;
+import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectStatusModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.service.ProjectService;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,5 +27,11 @@ public class ProjectController {
     @ResponseStatus(HttpStatus.CREATED)
     public Map<String, Object> createProject(@Validated @RequestBody CreationProjectRequest projectRequest){
         return projectService.createProject(projectRequest);
+    }
+
+    @PatchMapping("/{id}/status")
+    public ProjectExecutionCompleteDto modifyProjectStatus(@Validated @RequestBody
+                                                           ProjectStatusModifyRequest modifyRequest){
+        return projectService.modifyProjectStatus(modifyRequest);
     }
 }
