@@ -3,7 +3,6 @@ package com.nhnacademy.minidoorayprojectmanagementapi.taskTag.entity;
 import com.nhnacademy.minidoorayprojectmanagementapi.tag.entity.Tag;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.entity.Task;
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
