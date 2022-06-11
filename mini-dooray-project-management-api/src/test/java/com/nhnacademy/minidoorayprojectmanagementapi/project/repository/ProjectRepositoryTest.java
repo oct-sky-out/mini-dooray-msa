@@ -3,6 +3,7 @@ package com.nhnacademy.minidoorayprojectmanagementapi.project.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectStatusModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.Project;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.ProjectStatus;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity.ProjectMember;
@@ -45,5 +46,15 @@ class ProjectRepositoryTest {
         projectMemberRepository.save(projectMember);
 
         assertThat(savedProject).isEqualTo(project);
+    }
+
+    @Test
+    void modifyStatusTest() {
+        ProjectStatusModifyRequest modifyRequest = new ProjectStatusModifyRequest();
+        modifyRequest.setProjectNo(1000L);
+        modifyRequest.setProjectStatus(ProjectStatus.END);
+
+        Long result = projectRepository.updateProjectStatus(modifyRequest);
+        assertThat(result).isEqualTo(1);
     }
 }
