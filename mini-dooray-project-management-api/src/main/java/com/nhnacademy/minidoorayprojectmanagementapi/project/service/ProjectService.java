@@ -1,7 +1,7 @@
 package com.nhnacademy.minidoorayprojectmanagementapi.project.service;
 
 import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.CreationProjectRequest;
-import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectCreationCompleteDto;
+import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectExecutionCompleteDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.Project;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.ProjectStatus;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.repository.ProjectRepository;
@@ -23,7 +23,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectCreationCompleteDto createProject(CreationProjectRequest projectRequest) {
+    public ProjectExecutionCompleteDto createProject(CreationProjectRequest projectRequest) {
         Project project = Project.builder()
             .name(projectRequest.getProjectName())
             .status(ProjectStatus.ACTIVE)
@@ -42,7 +42,7 @@ public class ProjectService {
             .build();
         ProjectMember savedAdmin = projectMemberRepository.saveAndFlush(projectMember);
 
-        return new ProjectCreationCompleteDto(
+        return new ProjectExecutionCompleteDto(
             savedProject.getProjectNo(),
             savedAdmin.getId(),
             savedProject.getName(),

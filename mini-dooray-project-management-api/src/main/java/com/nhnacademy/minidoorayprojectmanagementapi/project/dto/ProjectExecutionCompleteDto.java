@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ProjectCreationCompleteDto {
+public class ProjectExecutionCompleteDto {
     private Long projectNo;
 
     private String adminId;

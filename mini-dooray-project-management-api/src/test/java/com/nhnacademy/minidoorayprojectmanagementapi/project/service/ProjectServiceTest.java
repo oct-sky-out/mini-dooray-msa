@@ -3,7 +3,7 @@ package com.nhnacademy.minidoorayprojectmanagementapi.project.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.CreationProjectRequest;
-import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectCreationCompleteDto;
+import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectExecutionCompleteDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +22,7 @@ class ProjectServiceTest {
         projectRequest.setUserId("id");
         projectRequest.setUserNo(1L);
 
-        ProjectCreationCompleteDto saved = projectService.createProject(projectRequest);
+        ProjectExecutionCompleteDto saved = projectService.createProject(projectRequest);
 
         assertThat(saved.getName()).isEqualTo(projectRequest.getProjectName());
         assertThat(saved.getAdminId()).isEqualTo(projectRequest.getUserId());
