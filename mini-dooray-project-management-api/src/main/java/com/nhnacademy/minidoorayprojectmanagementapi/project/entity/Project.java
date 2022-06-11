@@ -1,18 +1,14 @@
 package com.nhnacademy.minidoorayprojectmanagementapi.project.entity;
 
-import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity.ProjectMember;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,19 +28,15 @@ public class Project {
     @Column(name = "project_no")
     private Long projectNo;
 
-    @JoinColumn(name = "project_admin_no")
-    @OneToOne(fetch = FetchType.LAZY)
-    private ProjectMember admin;
-
     @Column(name = "project_name", length = 30)
     private String name;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "project_status")
-    private ProjectStatus status;
+    private ProjectStatus status = ProjectStatus.ACTIVE;
 
     @Column(name = "project_create_at")
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Override
     public boolean equals(Object o) {

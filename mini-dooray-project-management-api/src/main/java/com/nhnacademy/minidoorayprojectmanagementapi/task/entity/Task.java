@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -38,7 +39,10 @@ public class Task {
     private Project project;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_author_no", nullable = false)
+    @JoinColumns({
+        @JoinColumn(name = "task_author_no", nullable = false, insertable = false, updatable = false),
+        @JoinColumn(name = "project_no", nullable = false, insertable = false, updatable = false)
+    })
     private ProjectMember author;
 
     @OneToOne(fetch = FetchType.LAZY)

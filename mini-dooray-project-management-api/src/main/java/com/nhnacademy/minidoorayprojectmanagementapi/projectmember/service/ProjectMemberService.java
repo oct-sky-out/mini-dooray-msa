@@ -7,6 +7,7 @@ import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.dto.projectme
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity.ProjectMember;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.repository.ProjectMemberRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProjectMemberService {
@@ -19,17 +20,18 @@ public class ProjectMemberService {
         this.projectRepository = projectRepository;
     }
 
+    @Transactional
     public ProjectMemberDto addProjectMember(ProjectMemberDto projectMemberDto) {
         Project project =projectRepository.findById(projectMemberDto.getProjectNo())
             .orElseThrow(ProjectNotFoundException::new);
-
+        ProjectMember.Pk pk = new ProjectMember.Pk(projectMemberDto.getUserNo(), project.getProjectNo());
         ProjectMember projectMember = ProjectMember.builder()
+                .pk(pk)
                 .id(projectMemberDto.getUserId())
-                .userNo(projectMemberDto.getUserNo())
                 .project(project)
                 .build();
 
-        projectMemberRepository.save(projectMember);
+        projectMemberRepository.saveAndFlush(projectMember);
 
         return projectMemberDto;
     }

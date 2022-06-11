@@ -9,6 +9,7 @@ import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity.Projec
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.repository.ProjectMemberRepository;
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProjectService {
@@ -21,27 +22,29 @@ public class ProjectService {
         this.projectMemberRepository = projectMemberRepository;
     }
 
+    @Transactional
     public ProjectCreationCompleteDto createProject(CreationProjectRequest projectRequest) {
-        ProjectMember admin = ProjectMember.builder()
-            .id(projectRequest.getUserId())
-            .userNo(projectRequest.getUserNo())
-            .build();
-
         Project project = Project.builder()
             .name(projectRequest.getProjectName())
             .status(ProjectStatus.ACTIVE)
-            .admin(admin)
             .createdAt(LocalDateTime.now())
             .build();
 
-        admin.setProject(project);
+        Project savedProject = projectRepository.saveAndFlush(project);
 
-        Project savedProject = projectRepository.save(project);
-        projectMemberRepository.save(admin);
+        ProjectMember.Pk pk = new ProjectMember.Pk(projectRequest.getUserNo(), savedProject.getProjectNo());
+        ProjectMember projectMember = ProjectMember
+            .builder()
+            .pk(pk)
+            .project(savedProject)
+            .id(projectRequest.getUserId())
+            .isAdmin(false)
+            .build();
+        ProjectMember savedAdmin = projectMemberRepository.saveAndFlush(projectMember);
 
         return new ProjectCreationCompleteDto(
             savedProject.getProjectNo(),
-            admin.getId(),
+            savedAdmin.getId(),
             savedProject.getName(),
             savedProject.getStatus(),
             savedProject.getCreatedAt()

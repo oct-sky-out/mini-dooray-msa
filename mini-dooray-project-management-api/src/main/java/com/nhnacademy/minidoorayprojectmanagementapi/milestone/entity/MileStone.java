@@ -45,7 +45,7 @@ public class MileStone {
     @Column(name = "end_date", length = 20, nullable = false)
     private LocalDate end;
 
-    @Column(name = "end_status", length = 20, nullable = false, columnDefinition = "TINYINT(1)")
+    @Column(name = "end_status", length = 20, nullable = false, columnDefinition = "BOOLEAN default 0")
     private Boolean status;
 
     @OneToMany(orphanRemoval = true)

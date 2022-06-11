@@ -1,11 +1,13 @@
 package com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity;
 
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.Project;
+import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
@@ -25,11 +27,10 @@ import org.hibernate.Hibernate;
 @NoArgsConstructor
 @Getter
 public class ProjectMember {
-    @Id
-    @Column(name = "user_no")
-    private Long userNo;
+    @EmbeddedId
+    public Pk pk;
 
-    @MapsId
+    @MapsId("projectNo")
     @JoinColumn(name = "project_no")
     @ManyToOne(fetch = FetchType.LAZY)
     @Setter
@@ -37,6 +38,22 @@ public class ProjectMember {
 
     @Column(name = "id", length = 50)
     private String id;
+
+    @Column(name = "project_admin", columnDefinition = "BOOLEAN default 0")
+    private Boolean isAdmin;
+
+    @Embeddable
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @EqualsAndHashCode
+    @Setter
+    public static class Pk implements Serializable {
+        @Column(name = "user_no")
+        private Long userNo;
+
+        @Column(name = "project_no")
+        private Long projectNo;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -48,11 +65,11 @@ public class ProjectMember {
             return false;
         }
         ProjectMember that = (ProjectMember) o;
-        return userNo != null && Objects.equals(userNo, that.userNo);
+        return pk != null && Objects.equals(pk, that.pk);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(pk);
     }
 }
