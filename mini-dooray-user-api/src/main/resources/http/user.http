@@ -1,0 +1,20 @@
+GET http://localhost:8082/users/user1
+
+###
+
+POST http://localhost:8082/users
+Content-Type: application/json
+
+{
+  "userId": "user1"
+}
+###
+
+POST http://localhost:8082/users/signUp
+Content-Type: application/json
+
+{
+  "id": "anonymous1",
+  "password": "hello",
+  "email": "anonymous1@example.com"
+}
