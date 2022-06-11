@@ -2,7 +2,6 @@ package com.nhnacademy.minidoorayprojectmanagementapi.task.entity;
 
 import com.nhnacademy.minidoorayprojectmanagementapi.milestone.entity.MileStone;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.Project;
-import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity.ProjectMember;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -12,20 +11,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.PrimaryKeyJoinColumns;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.JoinColumnOrFormula;
-import org.hibernate.annotations.JoinColumnsOrFormulas;
-import org.hibernate.annotations.JoinFormula;
 
 @Entity
 @Table(name = "tasks")

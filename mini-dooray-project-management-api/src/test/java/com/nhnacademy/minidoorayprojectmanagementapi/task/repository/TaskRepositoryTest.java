@@ -1,13 +1,9 @@
 package com.nhnacademy.minidoorayprojectmanagementapi.task.repository;
 
-import static com.nhnacademy.minidoorayprojectmanagementapi.projectmember.Dummy.getTestDummyProject;
-import static com.nhnacademy.minidoorayprojectmanagementapi.projectmember.Dummy.getTestDummyProjectAdmin;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.nhnacademy.minidoorayprojectmanagementapi.milestone.entity.MileStone;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.Project;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.repository.ProjectRepository;
-import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.dto.ProjectMemberDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity.ProjectMember;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.repository.ProjectMemberRepository;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.entity.Task;
