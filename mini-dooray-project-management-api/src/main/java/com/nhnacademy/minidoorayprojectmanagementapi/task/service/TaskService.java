@@ -13,9 +13,9 @@ import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.entity.Task;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.repository.TaskRepository;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TaskService {
@@ -30,6 +30,7 @@ public class TaskService {
         this.projectMemberRepository = projectMemberRepository;
     }
 
+    @Transactional
     public TaskExecutionCompleteDto createTask(TaskCreationRequest creationRequest) {
         Optional<Project> project = projectRepository.findById(creationRequest.getProjectNo());
         Optional<ProjectMember> member = projectMemberRepository.findById(
@@ -55,14 +56,14 @@ public class TaskService {
         throw new TaskCreateException();
     }
 
+    @Transactional
     public TaskExecutionCompleteDto modifyTask(TaskModifyRequest taskModifyRequest) {
         Task task = taskRepository.findById(taskModifyRequest.getTaskNo())
             .orElseThrow(TaskNotFoundException::new);
 
         task.modifyTask(taskModifyRequest.getTitle(), taskModifyRequest.getContent());
 
-        Optional<MileStone> mileStone = Optional.ofNullable(task.getMileStone());
-        Long milestoneNo = mileStone.map(MileStone::getMilestoneNo).orElse(null);
+        Long milestoneNo = getMilestoneNo(task);
 
         taskRepository.saveAndFlush(task);
         return TaskExecutionCompleteDto.builder()
@@ -74,5 +75,27 @@ public class TaskService {
             .author(task.getAuthor())
             .createdAt(task.getCreatedAt())
             .build();
+    }
+
+    @Transactional
+    public TaskExecutionCompleteDto removeTask(Long taskNo) {
+        Task task = taskRepository.findById(taskNo)
+            .orElseThrow(TaskNotFoundException::new);
+
+        taskRepository.delete(task);
+        return TaskExecutionCompleteDto.builder()
+            .taskNo(task.getTaskNo())
+            .projectNo(task.getProject().getProjectNo())
+            .title(task.getTitle())
+            .content(task.getContent())
+            .milestoneNo(getMilestoneNo(task))
+            .author(task.getAuthor())
+            .createdAt(task.getCreatedAt())
+            .build();
+    }
+
+    private Long getMilestoneNo(Task task) {
+        Optional<MileStone> mileStone = Optional.ofNullable(task.getMileStone());
+        return mileStone.map(MileStone::getMilestoneNo).orElse(null);
     }
 }

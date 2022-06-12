@@ -81,4 +81,13 @@ class TaskServiceTest {
         assertThat(executionCompleteDto.getTitle()).isEqualTo(modifyRequest.getTitle());
         assertThat(executionCompleteDto.getTaskNo()).isEqualTo(modifyRequest.getTaskNo());
     }
+
+    @Test
+    void taskDeleteTest() {
+        Long taskNo = 7L;
+        TaskExecutionCompleteDto executionCompleteDto = taskService.removeTask(taskNo);
+
+        assertThat(executionCompleteDto.getTaskNo())
+            .isEqualTo(taskNo);
+    }
 }
