@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -12,6 +13,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.nhnacademy.minidoorayprojectmanagementapi.milestone.dto.MilestoneBasicDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.milestone.dto.MilestoneCreationRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.milestone.dto.MilestoneModifyRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.milestone.entity.Milestone;
 import com.nhnacademy.minidoorayprojectmanagementapi.milestone.service.MilestoneService;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.Project;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.ProjectStatus;
@@ -78,5 +81,36 @@ class MilestoneControllerTest {
                 .value(equalTo(request.getEnd().toString())))
             .andExpect(jsonPath("$.endStatus")
                 .value(equalTo(false)));
+    }
+
+    @Test
+    void modifyMilestone() throws Exception {
+        MilestoneBasicDto milestoneResult = MilestoneBasicDto.builder()
+            .milestoneNo(1L)
+            .name("modify name")
+            .start(LocalDate.now())
+            .end(LocalDate.now().plusMonths(1))
+            .endStatus(false)
+            .build();
+
+        MilestoneModifyRequest modifyRequest = new MilestoneModifyRequest();
+        modifyRequest.setStart(milestoneResult.getStart());
+        modifyRequest.setEnd(milestoneResult.getEnd());
+        modifyRequest.setName("modify name");
+        modifyRequest.setStatus(false);
+
+        given(milestoneService.modifyMilestone(1L, modifyRequest))
+            .willReturn(milestoneResult);
+
+        String json = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(modifyRequest);
+        mockMvc.perform(put("/projects/{projectNo}/milestone/{milestoneNo}", 1000L, 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.milestoneNo")
+                .value(equalTo(1)))
+            .andExpect(jsonPath("$.name")
+                .value(equalTo(modifyRequest.getName())));
     }
 }

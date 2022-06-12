@@ -4,6 +4,7 @@ import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.Project;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.entity.Task;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.Hibernate;
 
 @Entity
 @Table(name = "milestones")
@@ -48,11 +50,21 @@ public class Milestone {
     @Column(name = "end_status", length = 20, nullable = false, columnDefinition = "BOOLEAN default 0")
     private Boolean endStatus;
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "mile_stone_milestone_no")
-    private Set<Task> tasks = new LinkedHashSet<>();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null ||
+            Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
+        Milestone milestone = (Milestone) o;
+        return milestoneNo != null && Objects.equals(milestoneNo, milestone.milestoneNo);
+    }
 
-    public void setTasks(Set<Task> tasks) {
-        this.tasks = tasks;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

@@ -46,4 +46,21 @@ class MilestoneRepositoryTest {
         assertThat(savedMilestone.getEnd()).isEqualTo(milestone.getEnd());
         assertThat(savedMilestone.getEndStatus()).isEqualTo(milestone.getEndStatus());
     }
+
+    @Test
+    void modifyMilestoneTest() {
+        Milestone milestone = milestoneRepository.findById(1000L).get();
+        Milestone modifyMilestone = Milestone.builder()
+            .milestoneNo(milestone.getMilestoneNo())
+            .project(milestone.getProject())
+            .name(milestone.getName())
+            .end(LocalDate.now().plusMonths(1))
+            .start(LocalDate.now())
+            .endStatus(false)
+            .build();
+
+        Milestone modified = milestoneRepository.saveAndFlush(modifyMilestone);
+
+        assertThat(modified).isEqualTo(modifyMilestone);
+    }
 }

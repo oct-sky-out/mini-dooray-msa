@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nhnacademy.minidoorayprojectmanagementapi.milestone.dto.MilestoneBasicDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.milestone.dto.MilestoneCreationRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.milestone.dto.MilestoneModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.milestone.repository.MilestoneRepository;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.repository.ProjectRepository;
 import java.time.LocalDate;
@@ -19,7 +20,7 @@ class MilestoneServiceTest {
     MilestoneService milestoneService;
 
     @Test
-    void createMilestone() {
+    void createMilestoneTest() {
         MilestoneCreationRequest creationRequest = new MilestoneCreationRequest();
         creationRequest.setName("goal 1");
         creationRequest.setStart(LocalDate.now());
@@ -30,5 +31,20 @@ class MilestoneServiceTest {
         assertThat(result.getName()).isEqualTo(creationRequest.getName());
         assertThat(result.getStart()).isEqualTo(creationRequest.getStart());
         assertThat(result.getEnd()).isEqualTo(creationRequest.getEnd());
+    }
+
+    @Test
+    void milestoneModifyTest() {
+        MilestoneModifyRequest modifyRequest = new MilestoneModifyRequest();
+        modifyRequest.setStart(LocalDate.now());
+        modifyRequest.setEnd(LocalDate.now().plusMonths(1));
+        modifyRequest.setName("name");
+        modifyRequest.setStatus(false);
+
+        MilestoneBasicDto result = milestoneService.modifyMilestone(1000L, modifyRequest);
+        assertThat(result.getName()).isEqualTo(modifyRequest.getName());
+        assertThat(result.getStart()).isEqualTo(modifyRequest.getStart());
+        assertThat(result.getEnd()).isEqualTo(modifyRequest.getEnd());
+        assertThat(result.getEndStatus()).isEqualTo(modifyRequest.getStatus());
     }
 }
