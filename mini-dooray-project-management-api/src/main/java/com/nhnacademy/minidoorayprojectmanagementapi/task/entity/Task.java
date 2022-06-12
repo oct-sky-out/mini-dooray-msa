@@ -52,6 +52,11 @@ public class Task {
     @Column(name = "task_created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    public void modifyTask(String title, String content){
+        this.title = title;
+        this.content = content;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
