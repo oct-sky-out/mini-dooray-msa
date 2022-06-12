@@ -63,4 +63,10 @@ public class TaskController {
                                                       TaskRegisterMilestoneRequest milestoneRequest) {
         return taskService.registerMilestoneToTask(projectNo, taskNo, milestoneRequest.getMilestoneNo());
     }
+
+    @DeleteMapping("/{taskNo}/milestone")
+    public TaskExecutionCompleteDto dropMilestone(@PathVariable("projectNo") Long projectNo,
+                                                  @PathVariable("taskNo") Long taskNo) {
+        return taskService.dropMilestone(projectNo, taskNo);
+    }
 }

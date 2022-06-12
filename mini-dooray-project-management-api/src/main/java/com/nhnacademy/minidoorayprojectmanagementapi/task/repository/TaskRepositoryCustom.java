@@ -14,4 +14,6 @@ public interface TaskRepositoryCustom {
     Optional<TaskDetailResponse> findTaskDetail(Long projectNo, Long taskNo);
 
     Long registerMilestone(Long projectNo, Long taskNo, Long milestoneNo);
+
+    Long dropMilestone(Long projectNo, Long taskNo);
 }

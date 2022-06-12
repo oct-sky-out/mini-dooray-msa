@@ -40,7 +40,7 @@ public class Task {
     private Long author;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "milestone_no", nullable = false)
+    @JoinColumn(name = "milestone_no")
     private Milestone mileStone;
 
     @Column(name = "task_title", length = 30, nullable = false)

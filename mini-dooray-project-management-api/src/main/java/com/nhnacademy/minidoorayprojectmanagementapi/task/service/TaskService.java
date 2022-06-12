@@ -136,4 +136,21 @@ public class TaskService {
             .createdAt(task.getCreatedAt())
             .build();
     }
+
+    public TaskExecutionCompleteDto dropMilestone(Long projectNo, Long taskNo) {
+        taskRepository.dropMilestone(projectNo, taskNo);
+
+        Task task = taskRepository.findById(taskNo)
+            .orElseThrow(TaskNotFoundException::new);
+
+        return TaskExecutionCompleteDto.builder()
+            .taskNo(task.getTaskNo())
+            .projectNo(task.getProject().getProjectNo())
+            .title(task.getTitle())
+            .content(task.getContent())
+            .milestoneNo(getMilestoneNo(task))
+            .author(task.getAuthor())
+            .createdAt(task.getCreatedAt())
+            .build();
+    }
 }

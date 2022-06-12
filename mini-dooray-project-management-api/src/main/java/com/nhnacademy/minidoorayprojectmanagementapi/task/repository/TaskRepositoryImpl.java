@@ -10,6 +10,7 @@ import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskDetailResponse
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskPageDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.entity.QTask;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.entity.Task;
+import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import java.util.List;
@@ -86,7 +87,6 @@ public class TaskRepositoryImpl extends QuerydslRepositorySupport implements Tas
 
     @Override
     public Long registerMilestone(Long projectNo, Long taskNo, Long milestoneNo) {
-
         QTask task = QTask.task;
         QMilestone milestone = QMilestone.milestone;
 
@@ -99,6 +99,16 @@ public class TaskRepositoryImpl extends QuerydslRepositorySupport implements Tas
         return update(task)
             .where(task.taskNo.eq(taskNo).and(task.project.projectNo.eq(projectNo)))
             .set(task.mileStone, registerTarget)
+            .execute();
+    }
+
+    @Override
+    public Long dropMilestone(Long projectNo, Long taskNo) {
+        QTask task = QTask.task;
+
+        return update(task)
+            .where(task.taskNo.eq(taskNo).and(task.project.projectNo.eq(projectNo)))
+            .setNull(task.mileStone)
             .execute();
     }
 }

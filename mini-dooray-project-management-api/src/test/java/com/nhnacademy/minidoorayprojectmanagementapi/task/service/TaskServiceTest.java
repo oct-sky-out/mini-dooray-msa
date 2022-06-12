@@ -136,4 +136,16 @@ class TaskServiceTest {
         assertThat(result.getProjectNo()).isEqualTo(projectNo);
         assertThat(result.getMilestoneNo()).isEqualTo(milestoneNo);
     }
+
+    @Test
+    void dropMilestoneToTaskTest() {
+        Long projectNo = 1000L;
+        Long taskNo = 8L;
+        TaskExecutionCompleteDto result =
+            taskService.dropMilestone(projectNo, taskNo);
+
+        assertThat(result.getTaskNo()).isEqualTo(taskNo);
+        assertThat(result.getProjectNo()).isEqualTo(projectNo);
+        assertThat(result.getMilestoneNo()).isNull();
+    }
 }

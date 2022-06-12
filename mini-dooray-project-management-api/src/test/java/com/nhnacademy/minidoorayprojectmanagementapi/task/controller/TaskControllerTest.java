@@ -213,4 +213,29 @@ class TaskControllerTest {
             .andExpect(jsonPath("$.milestoneNo")
                 .value(equalTo(1000)));
     }
+
+    @Test
+    void dropMilestoneToTask() throws Exception {
+        given(taskService.dropMilestone(1000L, 8L))
+            .willReturn(
+                TaskExecutionCompleteDto.builder()
+                    .taskNo(8L)
+                    .content("con")
+                    .title("tit")
+                    .projectNo(1000L)
+                    .author(12L)
+                    .createdAt(LocalDateTime.now())
+                    .build()
+            );
+
+        mockMvc.perform(delete("/projects/{projectNo}/tasks/{taskNo}/milestone", 1000, 8L))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.taskNo")
+                .value(equalTo(8)))
+            .andExpect(jsonPath("$.projectNo")
+                .value(equalTo(1000)))
+            .andExpect(jsonPath("$.milestoneNo")
+                .value(equalTo(null)));
+    }
 }

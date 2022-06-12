@@ -103,4 +103,10 @@ class TaskRepositoryTest {
         assertThat(taskRepository.registerMilestone(1000L, 9L, 1000L))
             .isEqualTo(1);
     }
+
+    @Test
+    void dropMilestoneTest(){
+        assertThat(taskRepository.dropMilestone(1000L, 9L))
+            .isEqualTo(1);
+    }
 }
