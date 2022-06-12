@@ -1,6 +1,7 @@
 package com.nhnacademy.minidoorayprojectmanagementapi.task.repository;
 
 import com.nhnacademy.minidoorayprojectmanagementapi.milestone.dto.MilestoneBasicDto;
+import com.nhnacademy.minidoorayprojectmanagementapi.milestone.entity.Milestone;
 import com.nhnacademy.minidoorayprojectmanagementapi.milestone.entity.QMilestone;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectExecutionCompleteDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.QProject;
@@ -10,6 +11,7 @@ import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskPageDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.entity.QTask;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.entity.Task;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -82,5 +84,21 @@ public class TaskRepositoryImpl extends QuerydslRepositorySupport implements Tas
         return Optional.ofNullable(result);
     }
 
+    @Override
+    public Long registerMilestone(Long projectNo, Long taskNo, Long milestoneNo) {
 
+        QTask task = QTask.task;
+        QMilestone milestone = QMilestone.milestone;
+
+        Milestone registerTarget = from(milestone)
+            .where(milestone.milestoneNo.eq(milestoneNo)
+                .and(milestone.project.projectNo.eq(projectNo)))
+            .select(milestone)
+            .fetchOne();
+
+        return update(task)
+            .where(task.taskNo.eq(taskNo).and(task.project.projectNo.eq(projectNo)))
+            .set(task.mileStone, registerTarget)
+            .execute();
+    }
 }

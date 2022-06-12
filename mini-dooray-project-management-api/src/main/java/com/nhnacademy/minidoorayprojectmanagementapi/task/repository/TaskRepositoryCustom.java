@@ -2,8 +2,6 @@ package com.nhnacademy.minidoorayprojectmanagementapi.task.repository;
 
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskDetailResponse;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskPageDto;
-import com.nhnacademy.minidoorayprojectmanagementapi.task.entity.Task;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,4 +12,6 @@ public interface TaskRepositoryCustom {
     Page<TaskPageDto> findAllTaskByPageable(Long projectNo, Pageable pageable);
 
     Optional<TaskDetailResponse> findTaskDetail(Long projectNo, Long taskNo);
+
+    Long registerMilestone(Long projectNo, Long taskNo, Long milestoneNo);
 }

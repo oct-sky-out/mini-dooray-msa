@@ -21,6 +21,7 @@ import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskDetailResponse
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskExecutionCompleteDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskPageResponse;
+import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskRegisterMilestoneRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.service.TaskService;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -168,7 +169,7 @@ class TaskControllerTest {
         given(taskService.findDetailTask(1000L, 8L))
             .willReturn(detailResponse);
 
-        mockMvc.perform(get("/projects/{taskNo}/tasks/{taskNo}", 1000, 8L))
+        mockMvc.perform(get("/projects/{projectNo}/tasks/{taskNo}", 1000, 8L))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.taskNo")
@@ -179,5 +180,37 @@ class TaskControllerTest {
                 .value(equalTo("title")))
             .andExpect(jsonPath("$.content")
                 .value(equalTo("content")));
+    }
+
+    @Test
+    void registerMilestoneToTask() throws Exception {
+        given(taskService.registerMilestoneToTask(1000L, 8L, 1000L))
+            .willReturn(
+                TaskExecutionCompleteDto.builder()
+                    .taskNo(8L)
+                    .content("con")
+                    .title("tit")
+                    .projectNo(1000L)
+                    .author(12L)
+                    .milestoneNo(1000L)
+                    .createdAt(LocalDateTime.now())
+                    .build()
+            );
+
+        TaskRegisterMilestoneRequest milestoneRequest = new TaskRegisterMilestoneRequest();
+        milestoneRequest.setMilestoneNo(1000L);
+        String json = new ObjectMapper().writeValueAsString(milestoneRequest);
+
+        mockMvc.perform(post("/projects/{projectNo}/tasks/{taskNo}/milestone", 1000, 8L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.taskNo")
+                .value(equalTo(8)))
+            .andExpect(jsonPath("$.projectNo")
+                .value(equalTo(1000)))
+            .andExpect(jsonPath("$.milestoneNo")
+                .value(equalTo(1000)));
     }
 }

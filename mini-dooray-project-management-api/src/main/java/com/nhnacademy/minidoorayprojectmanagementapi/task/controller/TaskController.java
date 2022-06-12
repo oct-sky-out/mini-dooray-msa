@@ -5,6 +5,7 @@ import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskDetailResponse
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskExecutionCompleteDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskPageResponse;
+import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskRegisterMilestoneRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.service.TaskService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -53,5 +54,13 @@ public class TaskController {
     public TaskDetailResponse showDetailTaskApi(@PathVariable("projectNo") Long projectNo,
                                                 @PathVariable("taskNo") Long taskNo){
         return taskService.findDetailTask(projectNo, taskNo);
+    }
+
+    @PostMapping("/{taskNo}/milestone")
+    public TaskExecutionCompleteDto registerMilestone(@PathVariable("projectNo") Long projectNo,
+                                                      @PathVariable("taskNo") Long taskNo,
+                                                      @Validated @RequestBody
+                                                      TaskRegisterMilestoneRequest milestoneRequest) {
+        return taskService.registerMilestoneToTask(projectNo, taskNo, milestoneRequest.getMilestoneNo());
     }
 }

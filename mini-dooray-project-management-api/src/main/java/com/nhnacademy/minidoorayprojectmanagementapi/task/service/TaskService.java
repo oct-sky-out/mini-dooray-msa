@@ -119,4 +119,21 @@ public class TaskService {
         return taskRepository.findTaskDetail(projectNo, taskNo)
             .orElseThrow(TaskNotFoundException::new);
     }
+
+    public TaskExecutionCompleteDto registerMilestoneToTask(Long projectNo, Long taskNo, Long milestoneNo) {
+        taskRepository.registerMilestone(projectNo, taskNo, milestoneNo);
+
+        Task task = taskRepository.findById(taskNo)
+            .orElseThrow(TaskNotFoundException::new);
+
+        return TaskExecutionCompleteDto.builder()
+            .taskNo(task.getTaskNo())
+            .projectNo(task.getProject().getProjectNo())
+            .title(task.getTitle())
+            .content(task.getContent())
+            .milestoneNo(getMilestoneNo(task))
+            .author(task.getAuthor())
+            .createdAt(task.getCreatedAt())
+            .build();
+    }
 }

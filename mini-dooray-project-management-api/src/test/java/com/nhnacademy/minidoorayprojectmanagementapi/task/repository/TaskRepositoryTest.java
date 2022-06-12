@@ -97,4 +97,10 @@ class TaskRepositoryTest {
         assertThat(findTask.getMilestone().getMilestoneNo()).isEqualTo(null);
         assertThat(findTask.getAuthor()).isEqualTo("anonymous3");
     }
+
+    @Test
+    void setMilestoneTest() {
+        assertThat(taskRepository.registerMilestone(1000L, 9L, 1000L))
+            .isEqualTo(1);
+    }
 }

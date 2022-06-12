@@ -123,4 +123,17 @@ class TaskServiceTest {
         assertThat(taskDetailResponse.getMilestone().getMilestoneNo())
             .isNull();
     }
+
+    @Test
+    void registerMilestoneToTaskTest() {
+        Long projectNo = 1000L;
+        Long taskNo = 8L;
+        Long milestoneNo = 1000L;
+        TaskExecutionCompleteDto result =
+            taskService.registerMilestoneToTask(projectNo, taskNo, milestoneNo);
+
+        assertThat(result.getTaskNo()).isEqualTo(taskNo);
+        assertThat(result.getProjectNo()).isEqualTo(projectNo);
+        assertThat(result.getMilestoneNo()).isEqualTo(milestoneNo);
+    }
 }
