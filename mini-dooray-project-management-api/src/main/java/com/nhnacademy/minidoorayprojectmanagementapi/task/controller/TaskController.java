@@ -1,6 +1,7 @@
 package com.nhnacademy.minidoorayprojectmanagementapi.task.controller;
 
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskCreationRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskDetailResponse;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskExecutionCompleteDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskPageResponse;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/projects/{id}/tasks")
+@RequestMapping("/projects/{projectNo}/tasks")
 public class TaskController {
     private final TaskService taskService;
 
@@ -44,7 +45,13 @@ public class TaskController {
     }
 
     @GetMapping
-    public TaskPageResponse showTaskPage(@PathVariable("id")Long projectId, Pageable pageable){
-        return taskService.getTaskPage(projectId, pageable);
+    public TaskPageResponse showTaskApi(@PathVariable("projectNo")Long projectNo, Pageable pageable){
+        return taskService.getTaskPage(projectNo, pageable);
+    }
+
+    @GetMapping("/{taskNo}")
+    public TaskDetailResponse showDetailTaskApi(@PathVariable("projectNo") Long projectNo,
+                                                @PathVariable("taskNo") Long taskNo){
+        return taskService.findDetailTask(projectNo, taskNo);
     }
 }

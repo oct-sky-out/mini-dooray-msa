@@ -17,6 +17,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysql.cj.xdevapi.Collection;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskCreationRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskDetailResponse;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskExecutionCompleteDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskPageResponse;
@@ -151,5 +152,32 @@ class TaskControllerTest {
                 .value(equalTo(false)))
             .andExpect(jsonPath("$.currentPage")
                 .value(equalTo(0)));
+    }
+
+    @Test
+    void displayTaskDetailTet() throws Exception {
+        TaskDetailResponse detailResponse = new TaskDetailResponse();
+        detailResponse.setTaskNo(8L);
+        detailResponse.setProject(null);
+        detailResponse.setMilestone(null);
+        detailResponse.setAuthor("author1");
+        detailResponse.setTitle("title");
+        detailResponse.setContent("content");
+        detailResponse.setCreatedAt(LocalDateTime.now());
+
+        given(taskService.findDetailTask(1000L, 8L))
+            .willReturn(detailResponse);
+
+        mockMvc.perform(get("/projects/{taskNo}/tasks/{taskNo}", 1000, 8L))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.taskNo")
+                .value(equalTo(8)))
+            .andExpect(jsonPath("$.author")
+                .value(equalTo("author1")))
+            .andExpect(jsonPath("$.title")
+                .value(equalTo("title")))
+            .andExpect(jsonPath("$.content")
+                .value(equalTo("content")));
     }
 }
