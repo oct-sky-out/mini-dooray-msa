@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -14,17 +15,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysql.cj.xdevapi.Collection;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskCreationRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskExecutionCompleteDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskModifyRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskPageResponse;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.service.TaskService;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -119,5 +125,30 @@ class TaskControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.taskNo").value(equalTo(1)));
+    }
+
+    @Test
+    void displayTaskPageTest() throws Exception {
+        Pageable pageable = PageRequest.of(0,5);
+        given(taskService.getTaskPage(pageable))
+            .willReturn(new TaskPageResponse(
+                Collections.emptyList(),
+                false,
+                false,
+                0));
+
+        mockMvc.perform(get("/projects/{id}/tasks", 10)
+                .param("size", "5")
+                .param("page", "0"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.content")
+                .value(equalTo(Collections.emptyList())))
+            .andExpect(jsonPath("$.hasNextPage")
+                .value(equalTo(false)))
+            .andExpect(jsonPath("$.hasPreviousPage")
+                .value(equalTo(false)))
+            .andExpect(jsonPath("$.currentPage")
+                .value(equalTo(0)));
     }
 }
