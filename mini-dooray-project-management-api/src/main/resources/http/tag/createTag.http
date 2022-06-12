@@ -1,0 +1,6 @@
+POST http://localhost:8081/projects/1000/tags
+Content-Type: application/json
+
+{
+  "tagName": "example"
+}

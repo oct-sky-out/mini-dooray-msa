@@ -55,6 +55,7 @@ public class TaskTagService {
             .collect(Collectors.toList());
     }
 
+    @Transactional
     public String dropTaskTag(Long projectNo, TaskTagRegisterRequestList taskTagRegisterRequestList) {
         List<TaskTagRequest> taskTagRequests =
             taskTagRegisterRequestList.getTaskTagRequests();

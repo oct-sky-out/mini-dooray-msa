@@ -1,0 +1,15 @@
+PUT http://localhost:8081/projects/7/tasks/tag
+Content-Type: application/json
+
+{
+  "taskTagRequests": [
+    {
+      "tagNo":5,
+      "taskNo":10
+    },
+    {
+      "tagNo":4,
+      "taskNo":10
+    }
+  ]
+}

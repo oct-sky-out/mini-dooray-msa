@@ -1,0 +1,9 @@
+PUT http://localhost:8081/projects/1000/milestone/1012
+Content-Type: application/json
+
+{
+  "name": "milestone modify",
+  "start": "1999-10-11",
+  "end": "2021-10-20",
+  "status": true
+}

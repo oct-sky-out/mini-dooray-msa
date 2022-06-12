@@ -38,16 +38,16 @@ public class Milestone {
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
 
-    @Column(name = "milestone_name", length = 20, nullable = false)
+    @Column(name = "milestone_name", length = 30, nullable = false)
     private String name;
 
-    @Column(name = "start_date", length = 20, nullable = false)
+    @Column(name = "start_date", nullable = false)
     private LocalDate start;
 
-    @Column(name = "end_date", length = 20, nullable = false)
+    @Column(name = "end_date", nullable = false)
     private LocalDate end;
 
-    @Column(name = "end_status", length = 20, nullable = false, columnDefinition = "BOOLEAN default 0")
+    @Column(name = "end_status", nullable = false, columnDefinition = "BOOLEAN default 0")
     private Boolean endStatus;
 
     @Override

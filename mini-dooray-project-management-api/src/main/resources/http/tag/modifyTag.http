@@ -1,0 +1,6 @@
+PATCH http://localhost:8081/projects/1000/tags/26
+Content-Type: application/json
+
+{
+  "tagName": "modify example tag"
+}
