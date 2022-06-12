@@ -3,13 +3,14 @@ package com.nhnacademy.minidoorayprojectmanagementapi.taskTag.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.minidoorayprojectmanagementapi.taskTag.dto.TaskTagBasicDto;
-import com.nhnacademy.minidoorayprojectmanagementapi.taskTag.dto.TaskTagRegisterRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.taskTag.dto.TaskTagRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.taskTag.dto.TaskTagRegisterRequestList;
 import com.nhnacademy.minidoorayprojectmanagementapi.taskTag.service.TaskTagService;
 import java.util.ArrayList;
@@ -31,13 +32,8 @@ class TaskTagControllerTest {
 
     @Test
     void registerTagsToTask() throws Exception {
-        TaskTagRegisterRequestList requestList = new TaskTagRegisterRequestList();
-        TaskTagRegisterRequest request1 = new TaskTagRegisterRequest(1L,2L);
-        TaskTagRegisterRequest request2 = new TaskTagRegisterRequest(2L,2L);
-        List<TaskTagRegisterRequest> taskTagRegisterRequests = new ArrayList<>();
-        taskTagRegisterRequests.add(request1);
-        taskTagRegisterRequests.add(request2);
-        requestList.setTaskTagRegisterRequests(taskTagRegisterRequests);
+        TaskTagRegisterRequestList requestList =
+            getTaskTagRegisterRequestList();
 
         List<TaskTagBasicDto> responseBody = new ArrayList<>();
         responseBody.add(new TaskTagBasicDto(1L,"tag1",2L,"task2"));
@@ -59,5 +55,33 @@ class TaskTagControllerTest {
                 .value(2))
             .andExpect(jsonPath("$.result.[0].taskNo")
                 .value(2));
+    }
+
+    @Test
+    void dropTaskTagsTest() throws Exception {
+        TaskTagRegisterRequestList requestList = getTaskTagRegisterRequestList();
+
+        given(taskTagService.dropTaskTag(1000L, requestList))
+            .willReturn("success");
+
+        String json = new ObjectMapper().writeValueAsString(requestList);
+        mockMvc.perform(put("/projects/{projectNo}/tasks/tag", 1000L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.result")
+                .value("success"));
+    }
+
+    private TaskTagRegisterRequestList getTaskTagRegisterRequestList() {
+        TaskTagRegisterRequestList requestList = new TaskTagRegisterRequestList();
+        TaskTagRequest request1 = new TaskTagRequest(1L,2L);
+        TaskTagRequest request2 = new TaskTagRequest(2L,2L);
+        List<TaskTagRequest> taskTagRequests = new ArrayList<>();
+        taskTagRequests.add(request1);
+        taskTagRequests.add(request2);
+        requestList.setTaskTagRequests(taskTagRequests);
+        return requestList;
     }
 }

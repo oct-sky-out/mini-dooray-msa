@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class TaskTagRegisterRequest {
+public class TaskTagRequest {
     @NotNull
     Long tagNo;
 

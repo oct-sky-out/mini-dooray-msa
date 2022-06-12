@@ -11,5 +11,5 @@ public class TaskTagRegisterRequestList {
     @Valid
     @NotNull
     @Size(min = 1)
-    private List<TaskTagRegisterRequest> taskTagRegisterRequests;
+    private List<TaskTagRequest> taskTagRequests;
 }

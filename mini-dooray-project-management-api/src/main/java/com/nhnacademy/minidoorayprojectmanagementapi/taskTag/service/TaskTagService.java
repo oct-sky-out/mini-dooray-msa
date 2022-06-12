@@ -9,7 +9,7 @@ import com.nhnacademy.minidoorayprojectmanagementapi.tag.repository.TagRepositor
 import com.nhnacademy.minidoorayprojectmanagementapi.task.entity.Task;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.repository.TaskRepository;
 import com.nhnacademy.minidoorayprojectmanagementapi.taskTag.dto.TaskTagBasicDto;
-import com.nhnacademy.minidoorayprojectmanagementapi.taskTag.dto.TaskTagRegisterRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.taskTag.dto.TaskTagRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.taskTag.dto.TaskTagRegisterRequestList;
 import com.nhnacademy.minidoorayprojectmanagementapi.taskTag.entity.TaskTag;
 import com.nhnacademy.minidoorayprojectmanagementapi.taskTag.repository.TaskTagRepository;
@@ -35,17 +35,15 @@ public class TaskTagService {
 
     @Transactional
     public List<TaskTagBasicDto> addTaskTag(Long projectNo, TaskTagRegisterRequestList taskTagRegisterRequestList){
-        List<TaskTagRegisterRequest> taskTagRegisterRequests =
-            taskTagRegisterRequestList.getTaskTagRegisterRequests();
-        long taskNo = taskTagRegisterRequests.get(0).getTaskNo();
-        validateHasDifferentTaskNo(taskTagRegisterRequests, taskNo);
+        List<TaskTagRequest> taskTagRequests =
+            taskTagRegisterRequestList.getTaskTagRequests();
+        long taskNo = taskTagRequests.get(0).getTaskNo();
+        validateHasDifferentTaskNo(taskTagRequests, taskNo);
 
         Task task = getTaskByTaskNo(taskNo);
-        if(!Objects.equals(task.getProject().getProjectNo(), projectNo)){
-            throw new DoseNotEqualProjectNo();
-        }
+        validProjectNo(projectNo, task);
 
-        List<Tag> tags = getTags(taskTagRegisterRequests);
+        List<Tag> tags = getTags(taskTagRequests);
         List<TaskTag> taskTags = generateTaskTags(task, tags);
 
         return taskTagRepository.saveAllAndFlush(taskTags).stream()
@@ -55,6 +53,25 @@ public class TaskTagService {
                 taskTag.getPk().getTaskNo(),
                 taskTag.getTask().getTitle()))
             .collect(Collectors.toList());
+    }
+
+    public String dropTaskTag(Long projectNo, TaskTagRegisterRequestList taskTagRegisterRequestList) {
+        List<TaskTagRequest> taskTagRequests =
+            taskTagRegisterRequestList.getTaskTagRequests();
+        long taskNo = taskTagRequests.get(0).getTaskNo();
+        validateHasDifferentTaskNo(taskTagRequests, taskNo);
+
+        Task task = getTaskByTaskNo(taskNo);
+        validProjectNo(projectNo, task);
+
+        List<TaskTag.Pk> taskTagPks = taskTagRequests.stream()
+            .map(taskTagRequest ->
+                new TaskTag.Pk(taskTagRequest.getTaskNo(),taskTagRequest.getTagNo()))
+            .collect(Collectors.toList());
+
+        taskTagRepository.dropTaskTag(taskTagPks);
+
+        return "success";
     }
 
     private List<TaskTag> generateTaskTags(Task task, List<Tag> tags) {
@@ -70,8 +87,14 @@ public class TaskTagService {
             .collect(Collectors.toList());
     }
 
-    private void validateHasDifferentTaskNo(List<TaskTagRegisterRequest> taskTagRegisterRequest, long taskNo) {
-        boolean hasDifferentTaskNo = taskTagRegisterRequest.stream()
+    private void validProjectNo(Long projectNo, Task task) {
+        if(!Objects.equals(task.getProject().getProjectNo(), projectNo)){
+            throw new DoseNotEqualProjectNo();
+        }
+    }
+
+    private void validateHasDifferentTaskNo(List<TaskTagRequest> taskTagRequest, long taskNo) {
+        boolean hasDifferentTaskNo = taskTagRequest.stream()
             .noneMatch(taskTagRegisterTarget -> Objects.equals(taskTagRegisterTarget.getTaskNo(), taskNo));
 
         if(hasDifferentTaskNo){
@@ -84,11 +107,12 @@ public class TaskTagService {
             .orElseThrow(TaskNotFoundException::new);
     }
 
-    private List<Tag> getTags(List<TaskTagRegisterRequest> taskTagRegisterRequest) {
-        return taskTagRegisterRequest.stream()
+    private List<Tag> getTags(List<TaskTagRequest> taskTagRequest) {
+        return taskTagRequest.stream()
             .map(taskTagRegisterTarget ->
                 tagRepository.findById(taskTagRegisterTarget.getTagNo())
                     .orElseThrow(TagNotFoundException::new))
             .collect(Collectors.toList());
     }
+
 }

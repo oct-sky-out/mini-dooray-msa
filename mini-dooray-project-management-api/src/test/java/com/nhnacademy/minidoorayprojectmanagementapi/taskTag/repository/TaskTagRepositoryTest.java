@@ -52,4 +52,17 @@ class TaskTagRepositoryTest {
         assertThat(savedTaskTags.get(0)).isEqualTo(taskTags.get(0));
         assertThat(savedTaskTags.get(1)).isEqualTo(taskTags.get(1));
     }
+
+    @Test
+    void removeTaskTegTest() {
+        List<TaskTag.Pk> taskTagPks = new ArrayList<>();
+
+        TaskTag.Pk pk1 = new TaskTag.Pk(8L, 3L);
+        TaskTag.Pk pk2 = new TaskTag.Pk(8L, 26L);
+        taskTagPks.add(pk1);
+        taskTagPks.add(pk2);
+
+        int dropCount = taskTagRepository.dropTaskTag(taskTagPks);
+        assertThat(dropCount).isEqualTo(2);
+    }
 }
