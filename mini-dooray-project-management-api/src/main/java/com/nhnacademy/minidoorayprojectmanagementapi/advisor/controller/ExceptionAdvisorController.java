@@ -24,4 +24,12 @@ public class ExceptionAdvisorController {
         });
         return errors;
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(RuntimeException.class)
+    public Map<String, String> handleAnyExceptions(RuntimeException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("reason", ex.getMessage());
+        return errors;
+    }
 }
