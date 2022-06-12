@@ -7,6 +7,7 @@ import com.nhnacademy.minidoorayprojectmanagementapi.project.repository.ProjectR
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity.ProjectMember;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.repository.ProjectMemberRepository;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskModifyRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskPageDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.entity.Task;
 import java.time.LocalDateTime;
 import javax.persistence.EntityManager;
@@ -15,6 +16,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -61,5 +65,20 @@ class TaskRepositoryTest {
 
         assertThat(taskRepository.saveAndFlush(task))
             .isEqualTo(task);
+    }
+
+    @Test
+    void findAllTasks() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<TaskPageDto> taskPageDtos = taskRepository.findAllTaskByPageable(pageable);
+
+        assertThat(taskPageDtos.hasNext()).isFalse();
+        assertThat(taskPageDtos.hasContent()).isTrue();
+
+        TaskPageDto task = taskPageDtos.getContent().stream()
+            .findFirst()
+            .get();
+
+        assertThat(task.getTitle()).isEqualTo("tit");
     }
 }
