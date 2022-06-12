@@ -10,10 +10,14 @@ import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.repository.Pr
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskCreationRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskExecutionCompleteDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskModifyRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskPageDto;
+import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskPageResponse;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.entity.Task;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.repository.TaskRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -97,5 +101,16 @@ public class TaskService {
     private Long getMilestoneNo(Task task) {
         Optional<MileStone> mileStone = Optional.ofNullable(task.getMileStone());
         return mileStone.map(MileStone::getMilestoneNo).orElse(null);
+    }
+
+    public TaskPageResponse getTaskPage(Pageable pageable) {
+        Page<TaskPageDto> taskPage = taskRepository.findAllTaskByPageable(pageable);
+
+        return new TaskPageResponse(
+            taskPage.getContent(),
+            taskPage.hasNext(),
+            taskPage.hasPrevious(),
+            taskPage.getNumber()
+        );
     }
 }

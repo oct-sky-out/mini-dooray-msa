@@ -11,6 +11,7 @@ import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.repository.Pr
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskCreationRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskExecutionCompleteDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskModifyRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskPageResponse;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.entity.Task;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.repository.TaskRepository;
 import java.time.LocalDateTime;
@@ -19,6 +20,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -89,5 +92,16 @@ class TaskServiceTest {
 
         assertThat(executionCompleteDto.getTaskNo())
             .isEqualTo(taskNo);
+    }
+
+    @Test
+    void getTaskPageTest() {
+        Pageable pageable = PageRequest.of(0, 5);
+
+        TaskPageResponse responseBody = taskService.getTaskPage(pageable);
+        assertThat(responseBody.getContent()).hasSize(1);
+        assertThat(responseBody.getCurrentPage()).isEqualTo(0);
+        assertThat(responseBody.getHasNextPage()).isFalse();
+        assertThat(responseBody.getHasPreviousPage()).isFalse();
     }
 }
