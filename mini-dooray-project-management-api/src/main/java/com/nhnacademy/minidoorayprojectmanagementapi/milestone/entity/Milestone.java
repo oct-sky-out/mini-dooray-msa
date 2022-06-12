@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class MileStone {
+public class Milestone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "milestone_no", nullable = false)
@@ -46,7 +46,7 @@ public class MileStone {
     private LocalDate end;
 
     @Column(name = "end_status", length = 20, nullable = false, columnDefinition = "BOOLEAN default 0")
-    private Boolean status;
+    private Boolean endStatus;
 
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "mile_stone_milestone_no")

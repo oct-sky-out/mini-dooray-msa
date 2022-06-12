@@ -2,9 +2,13 @@ package com.nhnacademy.minidoorayprojectmanagementapi.milestone.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
+@AllArgsConstructor
 public class MilestoneBasicDto {
     private Long milestoneNo;
 
@@ -16,5 +20,5 @@ public class MilestoneBasicDto {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate end;
 
-    private Boolean status;
+    private Boolean endStatus;
 }
