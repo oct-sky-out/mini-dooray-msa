@@ -48,6 +48,7 @@ public class MilestoneService {
             .build();
     }
 
+    @Transactional
     public MilestoneBasicDto modifyMilestone(Long milestoneNo,
                                              MilestoneModifyRequest modifyRequest) {
         Milestone milestone = milestoneRepository.findById(milestoneNo)
@@ -72,6 +73,7 @@ public class MilestoneService {
             .build();
     }
 
+    @Transactional
     public MilestoneBasicDto removeMilestone(Long milestoneNo) {
         Milestone milestone = milestoneRepository.findById(milestoneNo)
             .orElseThrow(MilestoneNotFoundException::new);

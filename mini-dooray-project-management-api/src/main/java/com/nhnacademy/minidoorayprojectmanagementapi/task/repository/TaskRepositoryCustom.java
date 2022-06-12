@@ -2,6 +2,8 @@ package com.nhnacademy.minidoorayprojectmanagementapi.task.repository;
 
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskDetailResponse;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskPageDto;
+import com.nhnacademy.minidoorayprojectmanagementapi.task.entity.Task;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

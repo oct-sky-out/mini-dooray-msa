@@ -3,6 +3,7 @@ package com.nhnacademy.minidoorayprojectmanagementapi.taskTag.entity;
 import com.nhnacademy.minidoorayprojectmanagementapi.tag.entity.Tag;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.entity.Task;
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
@@ -17,6 +18,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.Hibernate;
 
 @Entity
 @Table(name = "task_tags")
@@ -49,5 +51,23 @@ public class TaskTag {
 
         @Column(name = "tag_no", nullable = false)
         private Long tagNo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null ||
+            Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
+        TaskTag taskTag = (TaskTag) o;
+        return pk != null && Objects.equals(pk, taskTag.pk);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pk);
     }
 }
