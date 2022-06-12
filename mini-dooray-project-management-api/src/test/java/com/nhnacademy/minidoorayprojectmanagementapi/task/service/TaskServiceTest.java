@@ -9,6 +9,7 @@ import com.nhnacademy.minidoorayprojectmanagementapi.project.repository.ProjectR
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity.ProjectMember;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.repository.ProjectMemberRepository;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskCreationRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskDetailResponse;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskExecutionCompleteDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskPageResponse;
@@ -104,5 +105,22 @@ class TaskServiceTest {
         assertThat(responseBody.getCurrentPage()).isEqualTo(0);
         assertThat(responseBody.getHasNextPage()).isFalse();
         assertThat(responseBody.getHasPreviousPage()).isFalse();
+    }
+
+    @Test
+    void findDetailTaskTest() {
+        Long projectNo = 1000L;
+        Long taskNo = 8L;
+        TaskDetailResponse taskDetailResponse =
+            taskService.findDetailTask(projectNo, taskNo);
+
+        assertThat(taskDetailResponse.getTaskNo())
+            .isEqualTo(taskNo);
+        assertThat(taskDetailResponse.getProject().getProjectNo())
+            .isEqualTo(projectNo);
+        assertThat(taskDetailResponse.getAuthor())
+            .isEqualTo("anonymous3");
+        assertThat(taskDetailResponse.getMilestone().getMilestoneNo())
+            .isNull();
     }
 }

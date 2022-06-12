@@ -8,6 +8,7 @@ import com.nhnacademy.minidoorayprojectmanagementapi.project.repository.ProjectR
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity.ProjectMember;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.repository.ProjectMemberRepository;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskCreationRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskDetailResponse;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskExecutionCompleteDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskPageDto;
@@ -112,5 +113,10 @@ public class TaskService {
             taskPage.hasPrevious(),
             taskPage.getNumber()
         );
+    }
+
+    public TaskDetailResponse findDetailTask(Long projectNo, Long taskNo) {
+        return taskRepository.findTaskDetail(projectNo, taskNo)
+            .orElseThrow(TaskNotFoundException::new);
     }
 }

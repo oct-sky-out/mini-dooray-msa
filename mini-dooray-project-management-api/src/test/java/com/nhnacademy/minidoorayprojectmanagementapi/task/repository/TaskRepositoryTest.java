@@ -6,6 +6,7 @@ import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.Project;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.repository.ProjectRepository;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity.ProjectMember;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.repository.ProjectMemberRepository;
+import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskDetailResponse;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskPageDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.entity.Task;
@@ -81,5 +82,15 @@ class TaskRepositoryTest {
             .get();
 
         assertThat(task.getTitle()).isEqualTo("tit");
+    }
+
+    @Test
+    void findTaskByTestIdTest() {
+        TaskDetailResponse findTask = taskRepository.findTaskDetail(1000L, 9L).get();
+
+        assertThat(findTask.getTaskNo()).isEqualTo(9L);
+        assertThat(findTask.getProject().getProjectNo()).isEqualTo(1000L);
+        assertThat(findTask.getMilestone().getMilestoneNo()).isEqualTo(null);
+        assertThat(findTask.getAuthor()).isEqualTo("anonymous3");
     }
 }
