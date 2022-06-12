@@ -2,8 +2,10 @@ package com.nhnacademy.minidoorayprojectmanagementapi.task.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -12,6 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskCreationRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskExecutionCompleteDto;
+import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.service.TaskService;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
@@ -63,5 +66,36 @@ class TaskControllerTest {
                 .value(equalTo(request.getTitle())))
             .andExpect(jsonPath("$.content")
                 .value(equalTo(request.getContent())));
+    }
+
+    @Test
+    void taskModifyTest() throws Exception {
+        TaskModifyRequest modifyRequest = new TaskModifyRequest();
+        modifyRequest.setTaskNo(199L);
+        modifyRequest.setTitle("ti1");
+        modifyRequest.setContent("con1");
+
+        given(taskService.modifyTask(modifyRequest))
+            .willReturn(TaskExecutionCompleteDto.builder()
+                .taskNo(modifyRequest.getTaskNo())
+                .content(modifyRequest.getContent())
+                .title(modifyRequest.getTitle())
+                .projectNo(10L)
+                .author(12L)
+                .createdAt(LocalDateTime.now())
+                .build());
+
+        String json = new ObjectMapper().writeValueAsString(modifyRequest);
+        mockMvc.perform(put("/projects/{id}/tasks", 199)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.title")
+                .value(equalTo(modifyRequest.getTitle())))
+            .andExpect(jsonPath("$.content")
+                .value(equalTo(modifyRequest.getContent())))
+            .andExpect(jsonPath("$.taskNo")
+                .value(equalTo(modifyRequest.getTaskNo().intValue())));
     }
 }

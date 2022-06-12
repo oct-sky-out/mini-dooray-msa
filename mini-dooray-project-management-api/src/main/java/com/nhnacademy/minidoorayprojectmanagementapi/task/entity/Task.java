@@ -43,7 +43,7 @@ public class Task {
     @JoinColumn(name = "milestone_no", nullable = false)
     private MileStone mileStone;
 
-    @Column(name = "task_title", nullable = false)
+    @Column(name = "task_title", length = 30, nullable = false)
     private String title;
 
     @Column(name = "task_content", nullable = false)
