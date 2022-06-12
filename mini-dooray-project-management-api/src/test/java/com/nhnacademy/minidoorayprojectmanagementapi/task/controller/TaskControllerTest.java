@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -97,5 +99,25 @@ class TaskControllerTest {
                 .value(equalTo(modifyRequest.getContent())))
             .andExpect(jsonPath("$.taskNo")
                 .value(equalTo(modifyRequest.getTaskNo().intValue())));
+    }
+
+    @Test
+    void taskDeleteTest() throws Exception {
+        given(taskService.removeTask(1L))
+            .willReturn(
+                TaskExecutionCompleteDto.builder()
+                    .taskNo(1L)
+                    .content("con")
+                    .title("tit")
+                    .projectNo(10L)
+                    .author(12L)
+                    .createdAt(LocalDateTime.now())
+                    .build()
+            );
+
+        mockMvc.perform(delete("/projects/{id}/tasks/{taskNo}", 199, 1))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.taskNo").value(equalTo(1)));
     }
 }

@@ -6,6 +6,8 @@ import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.service.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,5 +33,10 @@ public class TaskController {
     @PutMapping
     public TaskExecutionCompleteDto modifyTask(@Validated @RequestBody TaskModifyRequest modifyRequest){
         return taskService.modifyTask(modifyRequest);
+    }
+
+    @DeleteMapping("/{taskNo}")
+    public TaskExecutionCompleteDto deleteTask(@PathVariable("taskNo") Long taskNo){
+        return taskService.removeTask(taskNo);
     }
 }
