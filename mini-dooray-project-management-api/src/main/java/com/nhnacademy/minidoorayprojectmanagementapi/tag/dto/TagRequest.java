@@ -5,7 +5,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 @Data
-public class TagCreationRequest {
+public class TagRequest {
     @NotBlank
     @Length(max = 10)
     private String tagName;

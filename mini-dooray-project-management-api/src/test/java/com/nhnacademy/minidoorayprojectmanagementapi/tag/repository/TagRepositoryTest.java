@@ -31,4 +31,10 @@ class TagRepositoryTest {
         assertThat(savedTag.getProject().getProjectNo()).isEqualTo(project.getProjectNo());
         assertThat(savedTag.getName()).isEqualTo(tag.getName());
     }
+
+    @Test
+    void tagModifyTest() {
+        Long result = tagRepository.modifyTag(1000L, 3L, "modify!!");
+        assertThat(result).isEqualTo(1L);
+    }
 }

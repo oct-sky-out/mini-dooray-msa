@@ -1,10 +1,11 @@
 package com.nhnacademy.minidoorayprojectmanagementapi.tag.controller;
 
 import com.nhnacademy.minidoorayprojectmanagementapi.tag.dto.TagBasicDto;
-import com.nhnacademy.minidoorayprojectmanagementapi.tag.dto.TagCreationRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.tag.dto.TagRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.tag.service.TagService;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,14 @@ public class TagController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TagBasicDto generateTag(@PathVariable("projectNo") Long projectNo,
-                                   @Validated @RequestBody TagCreationRequest tagCreationRequest){
-        return tagService.createTag(projectNo,tagCreationRequest.getTagName());
+                                   @Validated @RequestBody TagRequest tagRequest){
+        return tagService.createTag(projectNo, tagRequest.getTagName());
+    }
+
+    @PatchMapping("/{tagNo}")
+    public TagBasicDto modifyTagName(@PathVariable("projectNo") Long projectNo,
+                                     @PathVariable("tagNo") Long tagNo,
+                                     @Validated @RequestBody TagRequest tagRequest){
+        return tagService.modifyTagName(projectNo, tagNo, tagRequest.getTagName());
     }
 }

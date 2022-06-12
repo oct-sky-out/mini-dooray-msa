@@ -1,6 +1,8 @@
 package com.nhnacademy.minidoorayprojectmanagementapi.tag.service;
 
 import com.nhnacademy.minidoorayprojectmanagementapi.exceptions.ProjectNotFoundException;
+import com.nhnacademy.minidoorayprojectmanagementapi.exceptions.TagNotFoundException;
+import com.nhnacademy.minidoorayprojectmanagementapi.exceptions.TagUpdateFailureException;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectExecutionCompleteDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.Project;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.repository.ProjectRepository;
@@ -30,9 +32,26 @@ public class TagService {
             .build();
 
         Tag savedTag = tagRepository.saveAndFlush(tag);
+        return getTagBasicDto(tag, savedTag);
+    }
+
+    public TagBasicDto modifyTagName(Long projectNo, Long tagNo, String tagName) {
+        Long result = tagRepository.modifyTag(projectNo, tagNo, tagName);
+
+        if(result != 1){
+            throw new TagUpdateFailureException();
+        }
+
+        Tag modifiedTag = tagRepository.findById(tagNo)
+            .orElseThrow(TagNotFoundException::new);
+
+        return getTagBasicDto(modifiedTag, modifiedTag);
+    }
+
+    private TagBasicDto getTagBasicDto(Tag tag, Tag modifyTag) {
         TagBasicDto tagBasicDto = new TagBasicDto();
-        tagBasicDto.setTagNo(savedTag.getTagNo());
-        tagBasicDto.setName(savedTag.getName());
+        tagBasicDto.setTagNo(modifyTag.getTagNo());
+        tagBasicDto.setName(modifyTag.getName());
         tagBasicDto.setProject(new ProjectExecutionCompleteDto(
             tag.getProject().getProjectNo(),
             tag.getProject().getName(),

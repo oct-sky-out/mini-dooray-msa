@@ -3,14 +3,16 @@ package com.nhnacademy.minidoorayprojectmanagementapi.tag.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.minidoorayprojectmanagementapi.tag.dto.TagBasicDto;
-import com.nhnacademy.minidoorayprojectmanagementapi.tag.dto.TagCreationRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.tag.dto.TagRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.tag.service.TagService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +39,10 @@ class TagControllerTest {
         given(tagService.createTag(8L, "hello"))
             .willReturn(tagBasicDto);
 
-        TagCreationRequest tagCreationRequest = new TagCreationRequest();
-        tagCreationRequest.setTagName("hello");
+        TagRequest tagRequest = new TagRequest();
+        tagRequest.setTagName("hello");
 
-        String json = new ObjectMapper().writeValueAsString(tagCreationRequest);
+        String json = new ObjectMapper().writeValueAsString(tagRequest);
         mockMvc.perform(post("/projects/{projectNo}/tags", 8L)
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
@@ -50,6 +52,33 @@ class TagControllerTest {
                 .value(equalTo(100)))
             .andExpect(jsonPath("$.name")
                 .value(equalTo("hello")))
+            .andExpect(jsonPath("$.project")
+                .value(equalTo(null)));
+    }
+
+    @Test
+    void modifyTag() throws Exception {
+        TagBasicDto tagBasicDto = new TagBasicDto();
+        tagBasicDto.setTagNo(3L);
+        tagBasicDto.setName("modify!!");
+        tagBasicDto.setProject(null);
+
+        given(tagService.modifyTagName(1000L,3L, "modify!!"))
+            .willReturn(tagBasicDto);
+
+        TagRequest tagRequest = new TagRequest();
+        tagRequest.setTagName("modify!!");
+
+        String json = new ObjectMapper().writeValueAsString(tagRequest);
+        mockMvc.perform(patch("/projects/{projectNo}/tags/{tagNo}", 1000L,3L)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.tagNo")
+                .value(equalTo(3)))
+            .andExpect(jsonPath("$.name")
+                .value(equalTo("modify!!")))
             .andExpect(jsonPath("$.project")
                 .value(equalTo(null)));
     }
