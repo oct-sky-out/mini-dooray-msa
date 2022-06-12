@@ -35,6 +35,7 @@ public class TagService {
         return getTagBasicDto(tag, savedTag);
     }
 
+    @Transactional
     public TagBasicDto modifyTagName(Long projectNo, Long tagNo, String tagName) {
         Long result = tagRepository.modifyTag(projectNo, tagNo, tagName);
 
@@ -48,6 +49,14 @@ public class TagService {
         return getTagBasicDto(modifiedTag, modifiedTag);
     }
 
+    @Transactional
+    public TagBasicDto deleteTag(Long tagNo) {
+        Tag tag = tagRepository.findById(tagNo)
+            .orElseThrow(TagNotFoundException::new);
+        tagRepository.delete(tag);
+        return getTagBasicDto(tag, tag);
+    }
+
     private TagBasicDto getTagBasicDto(Tag tag, Tag modifyTag) {
         TagBasicDto tagBasicDto = new TagBasicDto();
         tagBasicDto.setTagNo(modifyTag.getTagNo());
@@ -59,4 +68,5 @@ public class TagService {
             tag.getProject().getCreatedAt()));
         return tagBasicDto;
     }
+
 }

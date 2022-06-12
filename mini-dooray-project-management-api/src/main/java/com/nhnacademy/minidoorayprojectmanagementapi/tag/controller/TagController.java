@@ -5,6 +5,7 @@ import com.nhnacademy.minidoorayprojectmanagementapi.tag.dto.TagRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.tag.service.TagService;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,4 +36,10 @@ public class TagController {
                                      @Validated @RequestBody TagRequest tagRequest){
         return tagService.modifyTagName(projectNo, tagNo, tagRequest.getTagName());
     }
+
+    @DeleteMapping("/{tagNo}")
+    public TagBasicDto deleteTag(@PathVariable("tagNo") Long tagNo){
+        return  tagService.deleteTag(tagNo);
+    }
+
 }

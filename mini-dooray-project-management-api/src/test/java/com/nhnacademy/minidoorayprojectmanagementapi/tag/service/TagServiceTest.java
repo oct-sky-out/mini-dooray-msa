@@ -33,4 +33,10 @@ class TagServiceTest {
         assertThat(tagBasicDto.getName()).isEqualTo(modifyTagReq.getTagName());
         assertThat(tagBasicDto.getProject().getProjectNo()).isEqualTo(1000L);
     }
+
+    @Test
+    void deleteTag() {
+        TagBasicDto tagBasicDto = tagService.deleteTag(3L);
+        assertThat(tagBasicDto.getTagNo()).isEqualTo(3L);
+    }
 }

@@ -3,6 +3,7 @@ package com.nhnacademy.minidoorayprojectmanagementapi.tag.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -73,6 +74,27 @@ class TagControllerTest {
         mockMvc.perform(patch("/projects/{projectNo}/tags/{tagNo}", 1000L,3L)
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.tagNo")
+                .value(equalTo(3)))
+            .andExpect(jsonPath("$.name")
+                .value(equalTo("modify!!")))
+            .andExpect(jsonPath("$.project")
+                .value(equalTo(null)));
+    }
+
+    @Test
+    void deleteTag() throws Exception {
+        TagBasicDto tagBasicDto = new TagBasicDto();
+        tagBasicDto.setTagNo(3L);
+        tagBasicDto.setName("modify!!");
+        tagBasicDto.setProject(null);
+
+        given(tagService.deleteTag(3L))
+            .willReturn(tagBasicDto);
+
+        mockMvc.perform(delete("/projects/{projectNo}/tags/{tagNo}", 1000L,3L))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.tagNo")
