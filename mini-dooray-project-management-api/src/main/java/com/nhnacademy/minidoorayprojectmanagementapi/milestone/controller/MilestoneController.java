@@ -6,6 +6,7 @@ import com.nhnacademy.minidoorayprojectmanagementapi.milestone.dto.MilestoneModi
 import com.nhnacademy.minidoorayprojectmanagementapi.milestone.service.MilestoneService;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,5 +37,10 @@ public class MilestoneController {
                                              @Validated @RequestBody
                                              MilestoneModifyRequest modifyRequest) {
         return milestoneService.modifyMilestone(milestoneNo, modifyRequest);
+    }
+
+    @DeleteMapping("/{milestoneNo}")
+    public MilestoneBasicDto removeMilestone(@PathVariable("milestoneNo") Long milestoneNo){
+        return milestoneService.removeMilestone(milestoneNo);
     }
 }

@@ -3,6 +3,9 @@ package com.nhnacademy.minidoorayprojectmanagementapi.milestone.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -112,5 +115,29 @@ class MilestoneControllerTest {
                 .value(equalTo(1)))
             .andExpect(jsonPath("$.name")
                 .value(equalTo(modifyRequest.getName())));
+    }
+
+    @Test
+    void removeMilestoneTest() throws Exception {
+        MilestoneBasicDto milestoneResult = MilestoneBasicDto.builder()
+            .milestoneNo(1L)
+            .name("modify name")
+            .start(LocalDate.now())
+            .end(LocalDate.now().plusMonths(1))
+            .endStatus(false)
+            .build();
+
+        given(milestoneService.removeMilestone(1L))
+            .willReturn(milestoneResult);
+
+        mockMvc.perform(delete("/projects/{projectNo}/milestone/{milestoneNo}", 1000L, 1L))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.milestoneNo")
+                .value(equalTo(1)))
+            .andExpect(jsonPath("$.name")
+                .value(equalTo(milestoneResult.getName())));
+
+        verify(milestoneService, times(1)).removeMilestone(1L);
     }
 }

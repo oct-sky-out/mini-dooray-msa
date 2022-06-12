@@ -9,7 +9,6 @@ import com.nhnacademy.minidoorayprojectmanagementapi.milestone.entity.Milestone;
 import com.nhnacademy.minidoorayprojectmanagementapi.milestone.repository.MilestoneRepository;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.Project;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.repository.ProjectRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,6 +69,20 @@ public class MilestoneService {
             .start(updatedMilestone.getStart())
             .end(updatedMilestone.getEnd())
             .endStatus(updatedMilestone.getEndStatus())
+            .build();
+    }
+
+    public MilestoneBasicDto removeMilestone(Long milestoneNo) {
+        Milestone milestone = milestoneRepository.findById(milestoneNo)
+            .orElseThrow(MilestoneNotFoundException::new);
+        milestoneRepository.delete(milestone);
+
+        return MilestoneBasicDto.builder()
+            .milestoneNo(milestone.getMilestoneNo())
+            .name(milestone.getName())
+            .start(milestone.getStart())
+            .end(milestone.getEnd())
+            .endStatus(milestone.getEndStatus())
             .build();
     }
 }

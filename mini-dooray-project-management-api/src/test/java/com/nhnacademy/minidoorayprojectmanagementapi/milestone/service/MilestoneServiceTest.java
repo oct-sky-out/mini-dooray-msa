@@ -47,4 +47,10 @@ class MilestoneServiceTest {
         assertThat(result.getEnd()).isEqualTo(modifyRequest.getEnd());
         assertThat(result.getEndStatus()).isEqualTo(modifyRequest.getStatus());
     }
+
+    @Test
+    void milestoneDeleteTest() {
+        MilestoneBasicDto result = milestoneService.removeMilestone(1000L);
+        assertThat(result.getMilestoneNo()).isEqualTo(1000L);
+    }
 }
