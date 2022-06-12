@@ -1,0 +1,8 @@
+PUT http://localhost:8081/projects/1000/tasks
+Content-Type: application/json
+
+{
+  "taskNo": 8,
+  "title": "modified!",
+  "content": "content!"
+}
