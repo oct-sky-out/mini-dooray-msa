@@ -7,5 +7,5 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
 public interface TaskRepositoryCustom {
-    Page<TaskPageDto> findAllTaskByPageable(Pageable pageable);
+    Page<TaskPageDto> findAllTaskByPageable(Long projectNo, Pageable pageable);
 }

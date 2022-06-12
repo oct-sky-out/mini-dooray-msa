@@ -44,7 +44,7 @@ public class TaskController {
     }
 
     @GetMapping
-    public TaskPageResponse showTaskPage(Pageable pageable){
-        return taskService.getTaskPage(pageable);
+    public TaskPageResponse showTaskPage(@PathVariable("id")Long projectId, Pageable pageable){
+        return taskService.getTaskPage(projectId, pageable);
     }
 }

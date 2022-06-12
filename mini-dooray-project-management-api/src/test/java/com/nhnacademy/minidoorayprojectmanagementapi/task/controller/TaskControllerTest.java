@@ -129,15 +129,16 @@ class TaskControllerTest {
 
     @Test
     void displayTaskPageTest() throws Exception {
+        Long projectNo = 100L;
         Pageable pageable = PageRequest.of(0,5);
-        given(taskService.getTaskPage(pageable))
+        given(taskService.getTaskPage(projectNo, pageable))
             .willReturn(new TaskPageResponse(
                 Collections.emptyList(),
                 false,
                 false,
                 0));
 
-        mockMvc.perform(get("/projects/{id}/tasks", 10)
+        mockMvc.perform(get("/projects/{id}/tasks", 100)
                 .param("size", "5")
                 .param("page", "0"))
             .andExpect(status().isOk())

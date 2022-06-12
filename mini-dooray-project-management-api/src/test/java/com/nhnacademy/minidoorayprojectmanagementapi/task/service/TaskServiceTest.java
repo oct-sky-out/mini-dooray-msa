@@ -96,9 +96,10 @@ class TaskServiceTest {
 
     @Test
     void getTaskPageTest() {
+        Long projectNo = 1000L;
         Pageable pageable = PageRequest.of(0, 5);
 
-        TaskPageResponse responseBody = taskService.getTaskPage(pageable);
+        TaskPageResponse responseBody = taskService.getTaskPage(projectNo, pageable);
         assertThat(responseBody.getContent()).hasSize(1);
         assertThat(responseBody.getCurrentPage()).isEqualTo(0);
         assertThat(responseBody.getHasNextPage()).isFalse();

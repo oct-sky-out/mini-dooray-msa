@@ -69,8 +69,9 @@ class TaskRepositoryTest {
 
     @Test
     void findAllTasks() {
+        Long projectNo = 1000L;
         Pageable pageable = PageRequest.of(0, 5);
-        Page<TaskPageDto> taskPageDtos = taskRepository.findAllTaskByPageable(pageable);
+        Page<TaskPageDto> taskPageDtos = taskRepository.findAllTaskByPageable(projectNo, pageable);
 
         assertThat(taskPageDtos.hasNext()).isFalse();
         assertThat(taskPageDtos.hasContent()).isTrue();

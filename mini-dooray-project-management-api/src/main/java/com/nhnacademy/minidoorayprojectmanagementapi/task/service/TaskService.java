@@ -103,8 +103,8 @@ public class TaskService {
         return mileStone.map(MileStone::getMilestoneNo).orElse(null);
     }
 
-    public TaskPageResponse getTaskPage(Pageable pageable) {
-        Page<TaskPageDto> taskPage = taskRepository.findAllTaskByPageable(pageable);
+    public TaskPageResponse getTaskPage(Long projectNo, Pageable pageable) {
+        Page<TaskPageDto> taskPage = taskRepository.findAllTaskByPageable(projectNo, pageable);
 
         return new TaskPageResponse(
             taskPage.getContent(),

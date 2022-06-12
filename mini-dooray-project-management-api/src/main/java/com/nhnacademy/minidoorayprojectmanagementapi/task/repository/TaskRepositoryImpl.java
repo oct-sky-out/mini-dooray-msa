@@ -16,10 +16,11 @@ public class TaskRepositoryImpl extends QuerydslRepositorySupport implements Tas
     }
 
     @Override
-    public Page<TaskPageDto> findAllTaskByPageable(Pageable pageable) {
+    public Page<TaskPageDto> findAllTaskByPageable(Long projectNo, Pageable pageable) {
         QTask task = QTask.task;
 
         List<TaskPageDto> tasks = from(task)
+            .where(task.project.projectNo.eq(projectNo))
             .select(
                 Projections.bean(TaskPageDto.class,
                     task.taskNo,
