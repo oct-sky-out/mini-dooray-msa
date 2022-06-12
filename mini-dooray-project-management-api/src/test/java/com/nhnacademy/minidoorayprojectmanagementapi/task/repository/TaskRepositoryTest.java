@@ -6,7 +6,7 @@ import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.Project;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.repository.ProjectRepository;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity.ProjectMember;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.repository.ProjectMemberRepository;
-import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskModifyDto;
+import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.entity.Task;
 import java.time.LocalDateTime;
 import javax.persistence.EntityManager;
@@ -50,12 +50,14 @@ class TaskRepositoryTest {
 
     @Test
     void modifyTaskTest() {
-        Task task = taskRepository.findById(7L).get();
-        TaskModifyDto taskModifyDto = new TaskModifyDto();
-        taskModifyDto.setTitle("midifyTitle");
-        taskModifyDto.setContent("modify content");
+        TaskModifyRequest taskModifyRequest = new TaskModifyRequest();
+        taskModifyRequest.setTaskNo(7L);
+        taskModifyRequest.setTitle("midifyTitle");
+        taskModifyRequest.setContent("modify content");
 
-        task.modifyTask(taskModifyDto.getTitle(), taskModifyDto.getContent());
+        Task task = taskRepository.findById(taskModifyRequest.getTaskNo()).get();
+
+        task.modifyTask(taskModifyRequest.getTitle(), taskModifyRequest.getContent());
 
         assertThat(taskRepository.saveAndFlush(task))
             .isEqualTo(task);

@@ -10,6 +10,7 @@ import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity.Projec
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.repository.ProjectMemberRepository;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskCreationRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskExecutionCompleteDto;
+import com.nhnacademy.minidoorayprojectmanagementapi.task.dto.TaskModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.entity.Task;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.repository.TaskRepository;
 import java.time.LocalDateTime;
@@ -66,5 +67,18 @@ class TaskServiceTest {
         assertThat(completeDto.getProjectNo()).isEqualTo(request.getProjectNo());
         assertThat(completeDto.getTitle()).isEqualTo(request.getTitle());
         assertThat(completeDto.getContent()).isEqualTo(request.getContent());
+    }
+
+    @Test
+    void taskModifyServiceTest() {
+        TaskModifyRequest modifyRequest = new TaskModifyRequest();
+        modifyRequest.setTaskNo(7L);
+        modifyRequest.setTitle("title123");
+        modifyRequest.setContent("hello");
+
+        TaskExecutionCompleteDto executionCompleteDto = taskService.modifyTask(modifyRequest);
+        assertThat(executionCompleteDto.getContent()).isEqualTo(modifyRequest.getContent());
+        assertThat(executionCompleteDto.getTitle()).isEqualTo(modifyRequest.getTitle());
+        assertThat(executionCompleteDto.getTaskNo()).isEqualTo(modifyRequest.getTaskNo());
     }
 }
