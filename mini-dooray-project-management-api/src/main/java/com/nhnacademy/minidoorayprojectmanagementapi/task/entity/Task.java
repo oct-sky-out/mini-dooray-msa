@@ -1,6 +1,6 @@
 package com.nhnacademy.minidoorayprojectmanagementapi.task.entity;
 
-import com.nhnacademy.minidoorayprojectmanagementapi.milestone.entity.MileStone;
+import com.nhnacademy.minidoorayprojectmanagementapi.milestone.entity.Milestone;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.Project;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -41,7 +41,7 @@ public class Task {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "milestone_no", nullable = false)
-    private MileStone mileStone;
+    private Milestone mileStone;
 
     @Column(name = "task_title", length = 30, nullable = false)
     private String title;

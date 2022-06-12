@@ -1,7 +1,7 @@
 package com.nhnacademy.minidoorayprojectmanagementapi.task.repository;
 
 import com.nhnacademy.minidoorayprojectmanagementapi.milestone.dto.MilestoneBasicDto;
-import com.nhnacademy.minidoorayprojectmanagementapi.milestone.entity.QMileStone;
+import com.nhnacademy.minidoorayprojectmanagementapi.milestone.entity.QMilestone;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectExecutionCompleteDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.QProject;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity.QProjectMember;
@@ -49,7 +49,7 @@ public class TaskRepositoryImpl extends QuerydslRepositorySupport implements Tas
         QTask task = QTask.task;
         QProject project = QProject.project;
         QProjectMember projectMember = QProjectMember.projectMember;
-        QMileStone mileStone = QMileStone.mileStone;
+        QMilestone mileStone = QMilestone.milestone;
 
         TaskDetailResponse result = from(task)
             .join(task.project, project)
@@ -64,12 +64,12 @@ public class TaskRepositoryImpl extends QuerydslRepositorySupport implements Tas
                     project.status,
                     project.createdAt
                     ).as("project"),
-                Projections.bean(MilestoneBasicDto.class,
+                Projections.constructor(MilestoneBasicDto.class,
                         mileStone.milestoneNo,
                         mileStone.name,
                         mileStone.start,
                         mileStone.end,
-                        mileStone.status
+                        mileStone.endStatus
                     ).as("milestone"),
                 projectMember.id.as("author"),
                 task.title,

@@ -76,7 +76,7 @@ class TaskServiceTest {
     @Test
     void taskModifyServiceTest() {
         TaskModifyRequest modifyRequest = new TaskModifyRequest();
-        modifyRequest.setTaskNo(7L);
+        modifyRequest.setTaskNo(8L);
         modifyRequest.setTitle("title123");
         modifyRequest.setContent("hello");
 
@@ -88,7 +88,7 @@ class TaskServiceTest {
 
     @Test
     void taskDeleteTest() {
-        Long taskNo = 7L;
+        Long taskNo = 8L;
         TaskExecutionCompleteDto executionCompleteDto = taskService.removeTask(taskNo);
 
         assertThat(executionCompleteDto.getTaskNo())
@@ -101,7 +101,7 @@ class TaskServiceTest {
         Pageable pageable = PageRequest.of(0, 5);
 
         TaskPageResponse responseBody = taskService.getTaskPage(projectNo, pageable);
-        assertThat(responseBody.getContent()).hasSize(1);
+        assertThat(responseBody.getContent()).hasSize(2);
         assertThat(responseBody.getCurrentPage()).isEqualTo(0);
         assertThat(responseBody.getHasNextPage()).isFalse();
         assertThat(responseBody.getHasPreviousPage()).isFalse();

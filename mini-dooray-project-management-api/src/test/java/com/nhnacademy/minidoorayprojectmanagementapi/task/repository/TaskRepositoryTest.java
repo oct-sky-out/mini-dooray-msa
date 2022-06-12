@@ -37,7 +37,7 @@ class TaskRepositoryTest {
     @Test
     void saveTaskTest() {
         Project project = projectRepository.findById(1000L).get();
-        ProjectMember member = projectMemberRepository.findById(new ProjectMember.Pk(100L,8L)).get();
+        ProjectMember member = projectMemberRepository.findById(new ProjectMember.Pk(100L,1000L)).get();
 
         Task testTask = Task.builder()
             .taskNo(1L)
@@ -50,13 +50,17 @@ class TaskRepositoryTest {
 
         Task saved = taskRepository.saveAndFlush(testTask);
 
-        assertThat(saved).isEqualTo(testTask);
+        assertThat(saved.getContent()).isEqualTo(testTask.getContent());
+        assertThat(saved.getCreatedAt()).isEqualTo(testTask.getCreatedAt());
+        assertThat(saved.getProject()).isEqualTo(testTask.getProject());
+        assertThat(saved.getAuthor()).isEqualTo(testTask.getAuthor());
+        assertThat(saved.getTitle()).isEqualTo(testTask.getTitle());
     }
 
     @Test
     void modifyTaskTest() {
         TaskModifyRequest taskModifyRequest = new TaskModifyRequest();
-        taskModifyRequest.setTaskNo(7L);
+        taskModifyRequest.setTaskNo(8L);
         taskModifyRequest.setTitle("midifyTitle");
         taskModifyRequest.setContent("modify content");
 

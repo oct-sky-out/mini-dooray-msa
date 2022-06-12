@@ -2,7 +2,7 @@ package com.nhnacademy.minidoorayprojectmanagementapi.task.service;
 
 import com.nhnacademy.minidoorayprojectmanagementapi.exceptions.TaskCreateException;
 import com.nhnacademy.minidoorayprojectmanagementapi.exceptions.TaskNotFoundException;
-import com.nhnacademy.minidoorayprojectmanagementapi.milestone.entity.MileStone;
+import com.nhnacademy.minidoorayprojectmanagementapi.milestone.entity.Milestone;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.Project;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.repository.ProjectRepository;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity.ProjectMember;
@@ -100,8 +100,8 @@ public class TaskService {
     }
 
     private Long getMilestoneNo(Task task) {
-        Optional<MileStone> mileStone = Optional.ofNullable(task.getMileStone());
-        return mileStone.map(MileStone::getMilestoneNo).orElse(null);
+        Optional<Milestone> mileStone = Optional.ofNullable(task.getMileStone());
+        return mileStone.map(Milestone::getMilestoneNo).orElse(null);
     }
 
     public TaskPageResponse getTaskPage(Long projectNo, Pageable pageable) {
