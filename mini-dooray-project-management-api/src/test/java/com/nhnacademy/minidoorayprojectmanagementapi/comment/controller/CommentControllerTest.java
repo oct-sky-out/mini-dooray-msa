@@ -1,11 +1,10 @@
 package com.nhnacademy.minidoorayprojectmanagementapi.comment.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -14,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.minidoorayprojectmanagementapi.comment.dto.CommentBasicDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.comment.dto.CommentCreationRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.comment.dto.CommentModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.comment.service.CommentService;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
@@ -48,7 +48,7 @@ class CommentControllerTest {
             LocalDateTime.now()
         );
 
-        given(commentService.registerComment(commentCreationRequest))
+        given(commentService.registerComment(1L, commentCreationRequest))
             .willReturn(commentBasicDto);
 
         String json = new ObjectMapper().writeValueAsString(commentCreationRequest);
@@ -67,6 +67,44 @@ class CommentControllerTest {
                 .value(equalTo(commentBasicDto.getContent())));
 
         verify(commentService, times(1))
-            .registerComment(commentCreationRequest);
+            .registerComment(1L, commentCreationRequest);
+    }
+
+    @Test
+    void modifyCommentTest() throws Exception {
+        CommentModifyRequest commentModifyRequest = new CommentModifyRequest();
+        commentModifyRequest.setContent("modify!");
+
+        CommentBasicDto commentBasicDto = new CommentBasicDto(
+            1L,
+            1L,
+            "author1",
+            1L,
+            "task1",
+            commentModifyRequest.getContent(),
+            LocalDateTime.now()
+        );
+
+        given(commentService.modifyComment(1000L, 6L, commentModifyRequest))
+            .willReturn(commentBasicDto);
+
+        String json = new ObjectMapper().writeValueAsString(commentModifyRequest);
+        mockMvc.perform(patch("/projects/{projectNo}/tasks/{taskNo}/comments/{commentNo}", 1000, 1, 6)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.content")
+                .value(equalTo(commentBasicDto.getContent())))
+            .andExpect(jsonPath("$.commentNo")
+                .value(equalTo(commentBasicDto.getCommentNo().intValue())))
+            .andExpect(jsonPath("$.authorNo")
+                .value(equalTo(commentBasicDto.getAuthorNo().intValue())))
+            .andExpect(jsonPath("$.taskNo")
+                .value(equalTo(commentBasicDto.getTaskNo().intValue())));
+
+
+        verify(commentService, times(1))
+            .modifyComment(1000L, 6L, commentModifyRequest);
     }
 }

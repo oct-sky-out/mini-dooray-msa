@@ -42,4 +42,19 @@ class CommentRepositoryTest {
         assertThat(savedComment.getCreatedAt()).isEqualTo(comment.getCreatedAt());
         assertThat(savedComment.getAuthor()).isEqualTo(comment.getAuthor());
     }
+
+    @Test
+    void commentModifyTest() {
+        Comment comment = commentRepository.findById(6L).get();
+        Comment modifyComment = Comment.builder()
+            .commentNo(comment.getCommentNo())
+            .createdAt(comment.getCreatedAt())
+            .author(comment.getAuthor())
+            .task(comment.getTask())
+            .content("modify~~~")
+            .build();
+
+        assertThat(commentRepository.saveAndFlush(modifyComment))
+            .isEqualTo(modifyComment);
+    }
 }
