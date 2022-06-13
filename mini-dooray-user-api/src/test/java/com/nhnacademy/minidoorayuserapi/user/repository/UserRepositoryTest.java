@@ -1,8 +1,8 @@
 package com.nhnacademy.minidoorayuserapi.user.repository;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
+import com.nhnacademy.minidoorayuserapi.user.dto.UserBasicDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserDetailsDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserPasswordDto;
 import com.nhnacademy.minidoorayuserapi.user.entity.User;
@@ -13,6 +13,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -57,9 +60,18 @@ class UserRepositoryTest {
 
     @Test
     void findUserDetailsByEmail() {
-        UserDetailsDto userDetailsDto = userRepository.findUserDetailByUserEmail("user1@nhnacademy.com")
+        UserDetailsDto userDetailsDto = userRepository.findUserDetailByUserEmail("kds3335k@icloud.com")
             .get();
         assertThat(userDetailsDto.getId()).isEqualTo("user1");
-        assertThat(userDetailsDto.getEmail()).isEqualTo("user1@nhnacademy.com");
+        assertThat(userDetailsDto.getEmail()).isEqualTo("kds3335k@icloud.com");
+    }
+
+    @Test
+    void findAllJoinedUsers() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<UserBasicDto> joinedUsers = userRepository.findJoinedAllUserByPage(100L, pageable);
+
+        assertThat(joinedUsers.getContent()).hasSize(1);
+        assertThat(joinedUsers.hasNext()).isFalse();
     }
 }

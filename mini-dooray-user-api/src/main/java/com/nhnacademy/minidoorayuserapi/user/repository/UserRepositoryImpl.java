@@ -1,12 +1,18 @@
 package com.nhnacademy.minidoorayuserapi.user.repository;
 
+import com.nhnacademy.minidoorayuserapi.user.dto.UserBasicDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserDetailsDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserPasswordDto;
 import com.nhnacademy.minidoorayuserapi.user.entity.QUser;
 import com.nhnacademy.minidoorayuserapi.user.entity.User;
+import com.nhnacademy.minidoorayuserapi.user.entity.UserStatus;
 import com.querydsl.core.types.Projections;
+import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+import org.springframework.data.support.PageableExecutionUtils;
 
 public class UserRepositoryImpl extends QuerydslRepositorySupport implements UserRepositoryCustom {
     public UserRepositoryImpl() {
@@ -58,5 +64,23 @@ public class UserRepositoryImpl extends QuerydslRepositorySupport implements Use
         return Optional.ofNullable(userDetailsDto);
     }
 
+    @Override
+    public Page<UserBasicDto> findJoinedAllUserByPage(Long currentUserNo, Pageable pageable) {
+        QUser user = QUser.user;
+        List<UserBasicDto> joinedUsers = from(user)
+            .where(user.userNo.notIn(currentUserNo).and(user.status.eq(UserStatus.JOINED)))
+            .select(
+                Projections.bean(
+                    UserBasicDto.class,
+                    user.userNo,
+                    user.id,
+                    user.email
+                )
+            )
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize() + 1)
+            .fetch();
 
+        return PageableExecutionUtils.getPage(joinedUsers, pageable, joinedUsers::size);
+    }
 }
