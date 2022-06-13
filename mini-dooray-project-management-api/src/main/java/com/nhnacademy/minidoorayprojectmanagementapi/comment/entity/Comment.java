@@ -37,6 +37,9 @@ public class Comment {
     @Column(name = "comment_content", nullable = false)
     private String content;
 
+    @Column(name = "comment_author_user_no", nullable = false)
+    private Long author;
+
     @Column(name = "comment_created_at", nullable = false)
     private LocalDateTime createdAt;
 
