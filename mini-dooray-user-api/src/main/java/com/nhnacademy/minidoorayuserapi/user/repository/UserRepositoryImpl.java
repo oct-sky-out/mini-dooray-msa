@@ -40,4 +40,23 @@ public class UserRepositoryImpl extends QuerydslRepositorySupport implements Use
 
         return Optional.ofNullable(userDetailsDto);
     }
+
+    @Override
+    public Optional<UserDetailsDto> findUserDetailByUserEmail(String email) {
+        QUser user = QUser.user;
+
+        UserDetailsDto userDetailsDto = from(user)
+            .where(user.email.eq(email))
+            .select(Projections.bean(UserDetailsDto.class,
+                user.userNo,
+                user.id,
+                user.password,
+                user.email,
+                user.status))
+            .fetchOne();
+
+        return Optional.ofNullable(userDetailsDto);
+    }
+
+
 }

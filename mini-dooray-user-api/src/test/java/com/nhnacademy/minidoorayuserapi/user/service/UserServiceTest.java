@@ -7,6 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.nhnacademy.minidoorayuserapi.user.dto.SocialLoginEmailVerifyDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserDetailsDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserPasswordDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserSignUpRequest;
@@ -73,6 +74,26 @@ class UserServiceTest {
 
         UserSignUpRequest saved = userService.signUp(body);
         assertThat(saved).isEqualTo(body);
+    }
 
+    @Test
+    void findUserDetailsByUserEmailTest() {
+        String email = "user1@nhnacademy.com";
+        SocialLoginEmailVerifyDto emailVerifyDto = new SocialLoginEmailVerifyDto();
+        emailVerifyDto.setEmail(email);
+
+        UserDetailsDto userDetailsDto = new UserDetailsDto();
+        userDetailsDto.setUserNo(1L);
+        userDetailsDto.setId("id");
+        userDetailsDto.setPassword("password");
+        userDetailsDto.setEmail("email@email.nhn");
+        userDetailsDto.setStatus(UserStatus.DORMANT);
+
+        given(userRepository.findUserDetailByUserEmail(emailVerifyDto.getEmail()))
+            .willReturn(Optional.of(userDetailsDto));
+
+        UserDetailsDto result = userService.findByUserDetailsByEmail(emailVerifyDto);
+
+        assertThat(result).isEqualTo(userDetailsDto);
     }
 }

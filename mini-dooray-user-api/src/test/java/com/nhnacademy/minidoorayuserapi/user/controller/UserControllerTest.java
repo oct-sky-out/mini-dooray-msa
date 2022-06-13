@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.minidoorayuserapi.user.dto.SocialLoginEmailVerifyDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserDetailsDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserPasswordDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserPasswordRequest;
@@ -95,5 +96,31 @@ class UserControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         verify(userService, times(1)).signUp(requestBody);
+    }
+
+    @Test
+    void verifyEmailTest() throws Exception {
+        SocialLoginEmailVerifyDto requestBody = new SocialLoginEmailVerifyDto();
+        requestBody.setEmail("email@nhn.com");
+
+        UserDetailsDto userDetailsDto = new UserDetailsDto();
+        userDetailsDto.setUserNo(1L);
+        userDetailsDto.setPassword("password");
+        userDetailsDto.setEmail("email@email.com");
+        userDetailsDto.setId("id");
+        userDetailsDto.setStatus(UserStatus.JOINED);
+
+        given(userService.findByUserDetailsByEmail(requestBody))
+            .willReturn(userDetailsDto);
+
+        String json = new ObjectMapper().writeValueAsString(requestBody);
+
+        mockMvc.perform(post("/users/email")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.email")
+                .value(userDetailsDto.getEmail()));
     }
 }

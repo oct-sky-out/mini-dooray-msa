@@ -1,5 +1,6 @@
 package com.nhnacademy.minidoorayuserapi.user.controller;
 
+import com.nhnacademy.minidoorayuserapi.user.dto.SocialLoginEmailVerifyDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserDetailsDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserPasswordDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserPasswordRequest;
@@ -32,7 +33,7 @@ public class UserController {
     }
 
     @PostMapping
-    public UserPasswordDto existPassword(@RequestBody UserPasswordRequest requestBody){
+    public UserPasswordDto existPassword(@Validated @RequestBody UserPasswordRequest requestBody){
         return userService.findUserPassword(requestBody.getUserId());
     }
 
@@ -40,5 +41,11 @@ public class UserController {
     @PostMapping("/signUp")
     public UserSignUpRequest signUp(@Validated @RequestBody UserSignUpRequest signUpRequest){
         return userService.signUp(signUpRequest);
+    }
+
+    @PostMapping("/email")
+    public UserDetailsDto verifyEmail(@Validated @RequestBody
+                                       SocialLoginEmailVerifyDto socialLoginEmailVerify){
+        return userService.findByUserDetailsByEmail(socialLoginEmailVerify);
     }
 }

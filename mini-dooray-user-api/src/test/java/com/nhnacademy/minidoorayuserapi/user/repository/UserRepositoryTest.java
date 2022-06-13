@@ -54,4 +54,12 @@ class UserRepositoryTest {
         assertThat(userDetailsDto.getPassword()).isEqualTo("pw123");
         assertThat(userDetailsDto.getStatus()).isEqualTo(UserStatus.JOINED);
     }
+
+    @Test
+    void findUserDetailsByEmail() {
+        UserDetailsDto userDetailsDto = userRepository.findUserDetailByUserEmail("user1@nhnacademy.com")
+            .get();
+        assertThat(userDetailsDto.getId()).isEqualTo("user1");
+        assertThat(userDetailsDto.getEmail()).isEqualTo("user1@nhnacademy.com");
+    }
 }

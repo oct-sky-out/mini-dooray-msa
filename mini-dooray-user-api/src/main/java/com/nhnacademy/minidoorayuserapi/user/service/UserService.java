@@ -1,5 +1,6 @@
 package com.nhnacademy.minidoorayuserapi.user.service;
 
+import com.nhnacademy.minidoorayuserapi.user.dto.SocialLoginEmailVerifyDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserDetailsDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserPasswordDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserSignUpRequest;
@@ -43,5 +44,10 @@ public class UserService {
 
         userRepository.save(user);
         return signUpRequest;
+    }
+
+    public UserDetailsDto findByUserDetailsByEmail(SocialLoginEmailVerifyDto socialLoginEmailVerify) {
+        return userRepository.findUserDetailByUserEmail(socialLoginEmailVerify.getEmail())
+            .orElseThrow(() -> new UserNotFoundException("사용자 정보를 찾지 못하였습니다."));
     }
 }
