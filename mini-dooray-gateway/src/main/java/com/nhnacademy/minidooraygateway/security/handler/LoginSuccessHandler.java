@@ -1,9 +1,9 @@
 package com.nhnacademy.minidooraygateway.security.handler;
 
+import com.nhnacademy.minidooraygateway.security.dto.CustomUserDerailsResponse;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Objects;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -12,10 +12,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
-import org.springframework.stereotype.Component;
 
 public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     private final RedisTemplate<String, String> redisTemplate;
@@ -30,7 +27,7 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         throws ServletException, IOException {
         super.onAuthenticationSuccess(request, response, authentication);
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        CustomUserDerailsResponse userDetails = (CustomUserDerailsResponse) authentication.getPrincipal();
         ArrayList<GrantedAuthority> authorities = new ArrayList<>(userDetails.getAuthorities());
 
         HttpSession session = request.getSession(false);
@@ -43,7 +40,10 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         response.addCookie(cookie);
 
         redisTemplate.opsForHash().put(session.getId(), "userId", userDetails.getUsername());
+        redisTemplate.opsForHash().put(session.getId(), "userNo", userDetails.getUserNo().toString());
         redisTemplate.opsForHash().put(session.getId(), "authority", authorities.get(0).getAuthority());
         redisTemplate.boundHashOps(session.getId()).expire(Duration.ofDays(3));
+
+        request.setAttribute("isOauth", false);
     }
 }
