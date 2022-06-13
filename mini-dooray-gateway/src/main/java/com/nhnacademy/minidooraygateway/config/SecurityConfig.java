@@ -1,6 +1,7 @@
 package com.nhnacademy.minidooraygateway.config;
 
 import com.nhnacademy.minidooraygateway.security.handler.LoginSuccessHandler;
+import com.nhnacademy.minidooraygateway.security.handler.OAuthVerifySuccessHandler;
 import com.nhnacademy.minidooraygateway.security.provider.CustomDaoAuthenticationProvider;
 import com.nhnacademy.minidooraygateway.security.provider.CustomSessionAuthenticationStrategy;
 import com.nhnacademy.minidooraygateway.security.service.CustomUserDetailService;
@@ -18,7 +19,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
@@ -31,6 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+            .antMatchers("/").hasAnyAuthority()
             .anyRequest().permitAll()
             .and();
 
@@ -44,7 +50,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.oauth2Login()
                 .defaultSuccessUrl("/")
-                .successHandler(loginSuccessHandler(null))
+                .loginPage("/signIn")
+                .clientRegistrationRepository(clientRegistrationRepository())
+                .authorizedClientService(authorizedClientService())
+                .successHandler(oAuthVerifySuccessHandler(null, null))
             .and();
 
         http.formLogin()
@@ -59,7 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout()
             .clearAuthentication(true)
             .invalidateHttpSession(true)
-            .deleteCookies("JSESSIONID")
+            .deleteCookies("JSESSIONID", "SESSION")
             .and();
 
         http.csrf()
@@ -75,13 +84,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .frameOptions().sameOrigin()
             .and()
-                .exceptionHandling().accessDeniedPage("/error/403")
+                .exceptionHandling()
+                    .accessDeniedPage("/error/403")
             .and();
     }
 
     @Bean
-    public AuthenticationSuccessHandler loginSuccessHandler(
-        RedisTemplate<String, String> redisTemplate) {
+    public AuthenticationSuccessHandler oAuthVerifySuccessHandler(RedisTemplate<String, String> redisTemplate,
+                                                                  RestTemplate restTemplate) {
+        return new OAuthVerifySuccessHandler(redisTemplate, restTemplate);
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler loginSuccessHandler(RedisTemplate<String, String> redisTemplate) {
         return new LoginSuccessHandler(redisTemplate);
     }
 
@@ -113,13 +128,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public OAuth2AuthorizedClientService authorizedClientService() {
+        return new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository());
+    }
+
+    @Bean
+    public ClientRegistrationRepository clientRegistrationRepository() {
+        return new InMemoryClientRegistrationRepository(githubLogin());
+    }
+
+    @Bean
     public ClientRegistration githubLogin() {
         return CommonOAuth2Provider.GITHUB.getBuilder("github")
             .userNameAttributeName("email")
             .clientId("39249c7a9019cd6ab51a")
             .redirectUri("{baseUrl}/login/oauth2/code/github")
             .clientSecret("993f21e34413ebf5aa25d26fb79da2299f2b6009")
-            .scope("user")
+            .scope("user:email")
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
             .build();
     }

@@ -52,17 +52,11 @@ public class CustomUserDerailsResponse implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        if(Objects.equals(status, "LEAVED")){
-            return false;
-        }
-        return true;
+        return !Objects.equals(status, "LEAVED");
     }
 
     @Override
     public boolean isEnabled() {
-        if(Objects.equals(status, "JOINED")){
-            return true;
-        }
-        return false;
+        return Objects.equals(status, "JOINED");
     }
 }

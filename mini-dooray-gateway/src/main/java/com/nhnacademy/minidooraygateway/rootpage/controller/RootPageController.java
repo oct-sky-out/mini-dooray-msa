@@ -19,12 +19,7 @@ public class RootPageController {
     }
 
     @GetMapping
-    public String showRootPage(HttpServletRequest request, @CookieValue("SESSION")Cookie sessionCookie) {
-        if(Objects.nonNull(sessionCookie)){
-            log.debug("session available");
-            loggedService.verifyLoggedFromRedis(sessionCookie, request);
-            log.debug("redis!");
-        }
+    public String showRootPage(HttpServletRequest request) {
         return "index";
     }
 }
