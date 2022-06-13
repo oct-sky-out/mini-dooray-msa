@@ -4,8 +4,10 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -76,7 +78,7 @@ class CommentControllerTest {
         commentModifyRequest.setContent("modify!");
 
         CommentBasicDto commentBasicDto = new CommentBasicDto(
-            1L,
+            6L,
             1L,
             "author1",
             1L,
@@ -106,5 +108,30 @@ class CommentControllerTest {
 
         verify(commentService, times(1))
             .modifyComment(1000L, 6L, commentModifyRequest);
+    }
+
+    @Test
+    void removeCommentTest() throws Exception {
+        Long projectNo = 1000L;
+        Long commentNo = 6L;
+
+        CommentBasicDto commentBasicDto = new CommentBasicDto(
+            commentNo,
+            1L,
+            "author1",
+            1L,
+            "task1",
+            "content",
+            LocalDateTime.now()
+        );
+
+        given(commentService.removeComment(projectNo, commentNo))
+            .willReturn(commentBasicDto);
+
+        mockMvc.perform(delete("/projects/{projectNo}/tasks/{taskNo}/comments/{commentNo}", 1000, 1, 6))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.commentNo").value(equalTo(commentNo.intValue())))
+            .andDo(print());
     }
 }

@@ -85,6 +85,23 @@ public class CommentService {
         );
     }
 
+    public CommentBasicDto removeComment(Long projectNo, Long commentNo) {
+        Comment comment = commentRepository.findById(commentNo)
+            .orElseThrow(CommentNotFoundException::new);
+
+        commentRepository.delete(comment);
+        ProjectMember author = getProjectMember(projectNo, comment.getAuthor());
+        return new CommentBasicDto(
+            comment.getCommentNo(),
+            comment.getAuthor(),
+            author.getId(),
+            comment.getTask().getTaskNo(),
+            comment.getTask().getTitle(),
+            comment.getContent(),
+            comment.getCreatedAt()
+        );
+    }
+
     private ProjectMember getProjectMember(Long projectNo, Long authorNo) {
         ProjectMember.Pk memberPk = new ProjectMember.Pk(authorNo, projectNo);
         return projectMemberRepository.findById(memberPk)

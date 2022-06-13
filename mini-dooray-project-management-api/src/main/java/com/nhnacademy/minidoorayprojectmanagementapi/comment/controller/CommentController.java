@@ -7,6 +7,7 @@ import com.nhnacademy.minidoorayprojectmanagementapi.comment.service.CommentServ
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,4 +41,9 @@ public class CommentController {
         return commentService.modifyComment(projectNo, commentNo, creationRequest);
     }
 
+    @DeleteMapping("/{commentNo}")
+    public CommentBasicDto removeComment(@PathVariable("projectNo") Long projectNo,
+                                         @PathVariable("commentNo") Long commentNo){
+        return commentService.removeComment(projectNo, commentNo);
+    }
 }
