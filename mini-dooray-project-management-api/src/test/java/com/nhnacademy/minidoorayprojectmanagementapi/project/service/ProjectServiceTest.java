@@ -2,15 +2,18 @@ package com.nhnacademy.minidoorayprojectmanagementapi.project.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.CreationProjectRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.project.request.CreationProjectRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectExecutionCompleteDto;
-import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectStatusModifyRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.project.request.ProjectStatusModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.ProjectStatus;
+import com.nhnacademy.minidoorayprojectmanagementapi.project.response.MyProjectsPageResponse;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.dto.ProjectMemberDto;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -45,5 +48,15 @@ class ProjectServiceTest {
 
         assertThat(executionCompleteDto.getProjectNo()).isEqualTo(modifyRequest.getProjectNo());
         assertThat(executionCompleteDto.getStatus()).isEqualTo(modifyRequest.getProjectStatus());
+    }
+
+    @Test
+    void findMyProjectsTest() {
+        Pageable pageable = PageRequest.of(0, 5);
+        MyProjectsPageResponse projectsPageResponse = projectService.findMyProjects(100L, pageable);
+
+        assertThat(projectsPageResponse.getCurrentPage()).isEqualTo(0);
+        assertThat(projectsPageResponse.getProjects()).isNotEmpty();
+        assertThat(projectsPageResponse.isHasNext()).isFalse();
     }
 }

@@ -4,25 +4,32 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.CreationProjectRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.project.request.CreationProjectRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectExecutionCompleteDto;
-import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectStatusModifyRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.project.request.ProjectStatusModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.ProjectStatus;
+import com.nhnacademy.minidoorayprojectmanagementapi.project.response.MyProjectsPageResponse;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.service.ProjectService;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.dto.ProjectMemberDto;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -99,5 +106,27 @@ class ProjectControllerTest {
                 .value(equalTo(modifyRequest.getProjectStatus().getStatus())));
 
         verify(projectService, times(1)).modifyProjectStatus(modifyRequest);
+    }
+
+    @Test
+    void findMyProjectsTest() throws Exception {
+        Pageable pageable = PageRequest.of(0, 10);
+        given(projectService.findMyProjects(1L, pageable))
+            .willReturn(new MyProjectsPageResponse(
+                new ArrayList<>(),
+                false,
+                false,
+                0));
+
+        mockMvc.perform(get("/projects/{userNo}", 1)
+            .queryParam("size", "10")
+            .queryParam("page", "0"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.hasNext").value(equalTo(false)))
+            .andExpect(jsonPath("$.hasPrevious").value(equalTo(false)))
+            .andExpect(jsonPath("$.currentPage").value(equalTo(0)))
+            .andExpect(jsonPath("$.projects.size()").value(equalTo(0)))
+            .andDo(print());
     }
 }

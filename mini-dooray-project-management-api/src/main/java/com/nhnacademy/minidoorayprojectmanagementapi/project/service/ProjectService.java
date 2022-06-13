@@ -1,18 +1,22 @@
 package com.nhnacademy.minidoorayprojectmanagementapi.project.service;
 
 import com.nhnacademy.minidoorayprojectmanagementapi.exceptions.ProjectNotFoundException;
-import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.CreationProjectRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectBasicDto;
+import com.nhnacademy.minidoorayprojectmanagementapi.project.request.CreationProjectRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectExecutionCompleteDto;
-import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectStatusModifyRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.project.request.ProjectStatusModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.Project;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.ProjectStatus;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.repository.ProjectRepository;
+import com.nhnacademy.minidoorayprojectmanagementapi.project.response.MyProjectsPageResponse;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.dto.ProjectMemberDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity.ProjectMember;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.repository.ProjectMemberRepository;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,5 +77,17 @@ public class ProjectService {
             project.getStatus(),
             project.getCreatedAt()
         );
+    }
+
+    public MyProjectsPageResponse findMyProjects(Long userNo, Pageable pageable){
+        Page<ProjectBasicDto> projectPage = projectRepository.findMyProjects(userNo, pageable);
+
+        return new MyProjectsPageResponse(
+            projectPage.getContent(),
+            projectPage.hasNext(),
+            projectPage.hasPrevious(),
+            projectPage.getNumber()
+        );
+
     }
 }

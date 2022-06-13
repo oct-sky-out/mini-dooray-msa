@@ -1,6 +1,6 @@
 package com.nhnacademy.minidoorayprojectmanagementapi.project.repository;
 
-import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectStatusModifyRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.project.request.ProjectStatusModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

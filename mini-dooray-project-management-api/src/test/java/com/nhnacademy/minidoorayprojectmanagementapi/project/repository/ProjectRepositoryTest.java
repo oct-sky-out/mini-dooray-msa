@@ -3,7 +3,8 @@ package com.nhnacademy.minidoorayprojectmanagementapi.project.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectStatusModifyRequest;
+import com.nhnacademy.minidoorayprojectmanagementapi.project.dto.ProjectBasicDto;
+import com.nhnacademy.minidoorayprojectmanagementapi.project.request.ProjectStatusModifyRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.Project;
 import com.nhnacademy.minidoorayprojectmanagementapi.project.entity.ProjectStatus;
 import com.nhnacademy.minidoorayprojectmanagementapi.projectmember.entity.ProjectMember;
@@ -13,6 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -56,5 +60,15 @@ class ProjectRepositoryTest {
 
         Long result = projectRepository.updateProjectStatus(modifyRequest);
         assertThat(result).isEqualTo(1);
+    }
+
+    @Test
+    void findMyProjects() {
+        Pageable pageable = PageRequest.of(0,5);
+        Page<ProjectBasicDto> result = projectRepository.findMyProjects(100L, pageable);
+
+        assertThat(result.hasContent()).isTrue();
+        assertThat(result).hasSize(2);
+        assertThat(result.hasNext()).isFalse();
     }
 }

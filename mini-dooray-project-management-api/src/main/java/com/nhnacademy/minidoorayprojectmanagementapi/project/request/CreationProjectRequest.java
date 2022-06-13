@@ -1,4 +1,4 @@
-package com.nhnacademy.minidoorayprojectmanagementapi.project.dto;
+package com.nhnacademy.minidoorayprojectmanagementapi.project.request;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
