@@ -10,13 +10,21 @@
         <div class="my-3">
             프로젝트 번호 : <span th:text="${project.projectNo}"></span><br>
             프로젝트명 : <span th:text="${project.name}"></span><br>
+            프로젝트 상태 : <span th:text="${project.status}"></span><br>
             생성일 : <span th:text="${project.createdAt}"></span><br>
         </div>
+        <button><a th:href="@{|/projects/${project.projectNo}/status|}">프로젝트 상태수정</a></button>
     </div>
 <div>
-    <h1>
-        <a href="/projects/register">프로젝트 등록</a>
-    </h1>
+    <a href="/projects/register"><h1>프로젝트 등록</h1></a>
+</div>
+<div>
+    <div th:if="${hasPrevious}">
+        <a th:href="@{/projects(size=5, page=${currentPage - 1})}">이전</a>
+    </div>
+    <div th:if="${hasNext}">
+        <a th:href="@{/projects(size=5, page=${currentPage + 1})}">다음</a>
+    </div>
 </div>
 </body>
 </html>

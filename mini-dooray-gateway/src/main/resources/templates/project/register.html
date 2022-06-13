@@ -6,6 +6,7 @@
 </head>
 <body>
 <form action="/projects/register" method="post" >
+    프로젝트 명 :
     <input type="hidden" name="userNo" th:value="${#session.getAttribute('userNo')}" />
     <input type="hidden" name="userId" th:value="${#session.getAttribute('userId')}" />
     <input type="text" name="projectName" />

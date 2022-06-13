@@ -1,4 +1,4 @@
-package com.nhnacademy.minidooraygateway.project.request;
+package com.nhnacademy.minidooraygateway.project.respone;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -6,7 +6,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 @Data
-public class ProjectRegisterRequest {
+public class ProjectRegisterResponse {
     @NotNull
     Long userNo;
 

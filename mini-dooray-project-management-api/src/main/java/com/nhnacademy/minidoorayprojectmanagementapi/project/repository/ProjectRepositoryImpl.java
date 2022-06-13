@@ -40,10 +40,11 @@ public class ProjectRepositoryImpl extends QuerydslRepositorySupport implements 
                     project.projectNo,
                     project.name,
                     projectMember.id,
+                    project.status,
                     project.createdAt
                     ))
             .offset(pageable.getOffset())
-            .limit(pageable.getPageSize())
+            .limit(pageable.getPageSize() + 1)
             .fetch();
 
         return PageableExecutionUtils.getPage(projectBasics, pageable, projectBasics::size);

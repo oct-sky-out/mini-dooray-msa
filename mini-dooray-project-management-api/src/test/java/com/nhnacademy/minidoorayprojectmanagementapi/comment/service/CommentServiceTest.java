@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.nhnacademy.minidoorayprojectmanagementapi.comment.dto.CommentBasicDto;
 import com.nhnacademy.minidoorayprojectmanagementapi.comment.dto.CommentCreationRequest;
 import com.nhnacademy.minidoorayprojectmanagementapi.comment.dto.CommentModifyRequest;
-import com.nhnacademy.minidoorayprojectmanagementapi.comment.entity.Comment;
 import com.nhnacademy.minidoorayprojectmanagementapi.task.repository.TaskRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

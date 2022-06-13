@@ -10,5 +10,7 @@ public class ProjectBasicDto {
 
     private String name;
 
+    private String status;
+
     private LocalDateTime createdAt;
 }
