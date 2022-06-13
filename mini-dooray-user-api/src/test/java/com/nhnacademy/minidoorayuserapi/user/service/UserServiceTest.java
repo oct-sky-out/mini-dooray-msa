@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.nhnacademy.minidoorayuserapi.user.dto.SocialLoginEmailVerifyDto;
+import com.nhnacademy.minidoorayuserapi.user.dto.UserBasicDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserDetailsDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserPasswordDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserSignUpRequest;
@@ -15,11 +16,16 @@ import com.nhnacademy.minidoorayuserapi.user.entity.User;
 import com.nhnacademy.minidoorayuserapi.user.entity.UserStatus;
 import com.nhnacademy.minidoorayuserapi.user.repository.UserRepository;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -95,5 +101,17 @@ class UserServiceTest {
         UserDetailsDto result = userService.findByUserDetailsByEmail(emailVerifyDto);
 
         assertThat(result).isEqualTo(userDetailsDto);
+    }
+
+    @Test
+    void findJoinedAllUserTest() {
+        Pageable pageable = PageRequest.of(0, 5);
+        given(userRepository.findJoinedAllUserByPage(100L, pageable))
+            .willReturn(new PageImpl<>(new ArrayList<>(),pageable,0));
+
+        Page<UserBasicDto> joinedUser = userRepository.findJoinedAllUserByPage(100L, pageable);
+        assertThat(joinedUser.hasContent()).isFalse();
+        assertThat(joinedUser.hasNext()).isFalse();
+        assertThat(joinedUser.hasPrevious()).isFalse();
     }
 }

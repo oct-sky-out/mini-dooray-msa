@@ -15,16 +15,21 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.minidoorayuserapi.user.dto.SocialLoginEmailVerifyDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserDetailsDto;
+import com.nhnacademy.minidoorayuserapi.user.dto.UserFindAllResponse;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserPasswordDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserPasswordRequest;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserSignUpRequest;
 import com.nhnacademy.minidoorayuserapi.user.entity.UserStatus;
 import com.nhnacademy.minidoorayuserapi.user.service.UserService;
+import java.util.ArrayList;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -122,5 +127,27 @@ class UserControllerTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.email")
                 .value(userDetailsDto.getEmail()));
+    }
+
+    @Test
+    void findJoinedAllUserTest() throws Exception {
+        Long currentUserNo = 100L;
+        Pageable pageable = PageRequest.of(0, 3);
+
+        given(userService.findJoinedAllUser(currentUserNo, pageable))
+            .willReturn(
+                new PageImpl<>(new ArrayList<>(), pageable, 3)
+            );
+
+        mockMvc.perform(get("/users")
+                .param("userNo", "100")
+                .param("size", "3")
+                .param("page", "0")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.users").isEmpty())
+            .andExpect(jsonPath("$.hasNext").value(false))
+            .andExpect(jsonPath("$.hasPrevious").value(false));
     }
 }

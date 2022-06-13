@@ -1,7 +1,9 @@
 package com.nhnacademy.minidoorayuserapi.user.service;
 
 import com.nhnacademy.minidoorayuserapi.user.dto.SocialLoginEmailVerifyDto;
+import com.nhnacademy.minidoorayuserapi.user.dto.UserBasicDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserDetailsDto;
+import com.nhnacademy.minidoorayuserapi.user.dto.UserFindAllResponse;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserPasswordDto;
 import com.nhnacademy.minidoorayuserapi.user.dto.UserSignUpRequest;
 import com.nhnacademy.minidoorayuserapi.user.entity.User;
@@ -10,6 +12,8 @@ import com.nhnacademy.minidoorayuserapi.user.entity.UserStatus;
 import com.nhnacademy.minidoorayuserapi.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,5 +53,9 @@ public class UserService {
     public UserDetailsDto findByUserDetailsByEmail(SocialLoginEmailVerifyDto socialLoginEmailVerify) {
         return userRepository.findUserDetailByUserEmail(socialLoginEmailVerify.getEmail())
             .orElseThrow(() -> new UserNotFoundException("사용자 정보를 찾지 못하였습니다."));
+    }
+
+    public Page<UserBasicDto> findJoinedAllUser(Long userNo, Pageable pageable) {
+        return userRepository.findJoinedAllUserByPage(userNo, pageable);
     }
 }
