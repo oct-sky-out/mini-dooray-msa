@@ -41,7 +41,7 @@ public class TaskRepositoryImpl extends QuerydslRepositorySupport implements Tas
                     task.createdAt
                     ))
             .offset(pageable.getOffset())
-            .limit(pageable.getPageSize())
+            .limit(pageable.getPageSize() + 1)
             .fetch();
 
         return PageableExecutionUtils.getPage(tasks, pageable, tasks::size);

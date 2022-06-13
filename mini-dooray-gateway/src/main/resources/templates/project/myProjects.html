@@ -7,12 +7,14 @@
 </head>
 <body>
     <div th:each="project : ${projects}">
-        <div class="my-3">
-            프로젝트 번호 : <span th:text="${project.projectNo}"></span><br>
-            프로젝트명 : <span th:text="${project.name}"></span><br>
-            프로젝트 상태 : <span th:text="${project.status}"></span><br>
-            생성일 : <span th:text="${project.createdAt}"></span><br>
-        </div>
+        <a th:href="@{|/projects/${project.projectNo}/menu|}">
+            <div class="my-3">
+                프로젝트 번호 : <span th:text="${project.projectNo}"></span><br>
+                프로젝트명 : <span th:text="${project.name}"></span><br>
+                프로젝트 상태 : <span th:text="${project.status}"></span><br>
+                생성일 : <span th:text="${project.createdAt}"></span><br>
+            </div>
+        </a>
         <button><a th:href="@{|/projects/${project.projectNo}/status|}">프로젝트 상태수정</a></button>
     </div>
 <div>

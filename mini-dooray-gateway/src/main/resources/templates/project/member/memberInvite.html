@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>멤버 추가</title>
+</head>
+<body>
+<form th:each="user : ${users}" action="" method="post">
+    <input type="hidden" name="userNo" th:value="${user.userNo}"/>
+    <div th:text="user.id"></div>
+    <div th:text="user.email"></div>
+    <a th:href="@{|/project/${projectNo}/member/invite|}"><h2>멤버 추가하기</h2></a>
+</form>
+</body>
+</html>

@@ -64,4 +64,10 @@ public class ProjectController {
 
         return "redirect:/projects";
     }
+
+    @GetMapping("/{projectNo}/menu")
+    public String showProjectMenu(@PathVariable String projectNo, Model model){
+        model.addAttribute("projectNo", projectNo);
+        return "project/menu/menu";
+    }
 }
