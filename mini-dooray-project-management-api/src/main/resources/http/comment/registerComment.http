@@ -1,0 +1,8 @@
+POST http://localhost:8081/projects/1000/tasks/8/comments
+Content-Type: application/json
+
+{
+  "content": "hello",
+  "author": 100,
+  "taskNo":8
+}
