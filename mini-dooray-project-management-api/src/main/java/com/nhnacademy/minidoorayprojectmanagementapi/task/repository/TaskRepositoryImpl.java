@@ -50,22 +50,23 @@ public class TaskRepositoryImpl extends QuerydslRepositorySupport implements Tas
     @Override
     public Optional<TaskDetailResponse> findTaskDetail(Long projectNo, Long taskNo) {
         QTask task = QTask.task;
-        QProject project = QProject.project;
         QProjectMember projectMember = QProjectMember.projectMember;
         QMilestone mileStone = QMilestone.milestone;
 
         TaskDetailResponse result = from(task)
-            .join(task.project, project)
-            .join(projectMember).on(task.author.eq(projectMember.pk.userNo))
+            .join(projectMember)
+                .on(task.author.eq(projectMember.pk.userNo)
+                    .and(task.project.projectNo.eq(projectMember.pk.projectNo)))
             .leftJoin(task.mileStone, mileStone)
-            .where(project.projectNo.eq(projectNo).and(task.taskNo.eq(taskNo)))
+            .where(task.project.projectNo.eq(projectNo)
+                .and(task.taskNo.eq(taskNo)))
             .select(Projections.bean(TaskDetailResponse.class,
                 task.taskNo,
                 Projections.constructor(ProjectExecutionCompleteDto.class,
-                    project.projectNo,
-                    project.name,
-                    project.status,
-                    project.createdAt
+                    task.project.projectNo,
+                    task.project.name,
+                    task.project.status,
+                    task.project.createdAt
                     ).as("project"),
                 Projections.constructor(MilestoneBasicDto.class,
                         mileStone.milestoneNo,

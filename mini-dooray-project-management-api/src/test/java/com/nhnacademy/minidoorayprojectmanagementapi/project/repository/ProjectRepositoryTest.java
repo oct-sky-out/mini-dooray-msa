@@ -68,7 +68,7 @@ class ProjectRepositoryTest {
         Page<ProjectBasicDto> result = projectRepository.findMyProjects(100L, pageable);
 
         assertThat(result.hasContent()).isTrue();
-        assertThat(result).hasSize(2);
-        assertThat(result.hasNext()).isFalse();
+        assertThat(result).hasSize(6);
+        assertThat(result.hasNext()).isTrue();
     }
 }

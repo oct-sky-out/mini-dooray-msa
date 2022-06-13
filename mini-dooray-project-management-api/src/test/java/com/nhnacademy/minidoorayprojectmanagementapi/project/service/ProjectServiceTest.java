@@ -57,6 +57,6 @@ class ProjectServiceTest {
 
         assertThat(projectsPageResponse.getCurrentPage()).isEqualTo(0);
         assertThat(projectsPageResponse.getProjects()).isNotEmpty();
-        assertThat(projectsPageResponse.isHasNext()).isFalse();
+        assertThat(projectsPageResponse.isHasNext()).isTrue();
     }
 }
