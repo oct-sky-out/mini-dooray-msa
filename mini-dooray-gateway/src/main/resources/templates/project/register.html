@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>프로젝트 등록하기</title>
+</head>
+<body>
+<form action="/projects/register" method="post" >
+    <input type="hidden" name="userNo" th:value="${#session.getAttribute('userNo')}" />
+    <input type="hidden" name="userId" th:value="${#session.getAttribute('userId')}" />
+    <input type="text" name="projectName" />
+    <input type="submit" />
+</form>
+</body>
+</html>

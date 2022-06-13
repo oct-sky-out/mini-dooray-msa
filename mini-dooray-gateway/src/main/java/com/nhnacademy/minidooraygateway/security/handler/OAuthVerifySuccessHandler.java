@@ -48,7 +48,7 @@ public class OAuthVerifySuccessHandler extends SavedRequestAwareAuthenticationSu
 
         HttpSession session = request.getSession(false);
         session.setAttribute("userId", userDetails.getUsername());
-        session.setAttribute("userNo", userDetails.getUsername());
+        session.setAttribute("userNo", userDetails.getUserNo());
 
         Cookie cookie = new Cookie("SESSION", session.getId());
         cookie.setHttpOnly(true);

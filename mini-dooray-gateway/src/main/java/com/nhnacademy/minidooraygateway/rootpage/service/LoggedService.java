@@ -27,6 +27,7 @@ public class LoggedService {
         HttpSession session = request.getSession(false);
         String sessionId = cookie.getValue();
         String userId = (String) redisTemplate.opsForHash().get(sessionId, "userId");
+        String userNo = (String) redisTemplate.opsForHash().get(sessionId, "userNo");
         String authority = (String) redisTemplate.opsForHash().get(sessionId, "authority");
         if(hasUserId(userId)){
             GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(authority);
@@ -39,7 +40,10 @@ public class LoggedService {
                 new UsernamePasswordAuthenticationToken(user, user.getPassword());
             SecurityContextHolder.getContext()
                 .setAuthentication(authentication);
+
             session.setAttribute("userId", userId);
+            session.setAttribute("userNo", userNo);
+            session.setAttribute("authority", authority);
         }
     }
 

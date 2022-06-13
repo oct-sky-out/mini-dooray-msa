@@ -25,8 +25,6 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication)
         throws ServletException, IOException {
-        super.onAuthenticationSuccess(request, response, authentication);
-
         CustomUserDerailsResponse userDetails = (CustomUserDerailsResponse) authentication.getPrincipal();
         ArrayList<GrantedAuthority> authorities = new ArrayList<>(userDetails.getAuthorities());
 
@@ -44,6 +42,10 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         redisTemplate.opsForHash().put(session.getId(), "authority", authorities.get(0).getAuthority());
         redisTemplate.boundHashOps(session.getId()).expire(Duration.ofDays(3));
 
-        request.setAttribute("isOauth", false);
+        session.setAttribute("userId", userDetails.getUsername());
+        session.setAttribute("userNo", userDetails.getUserNo());
+        session.setAttribute("authority", authorities.get(0).getAuthority());
+
+        super.onAuthenticationSuccess(request, response, authentication);
     }
 }

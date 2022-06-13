@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>나의 프로젝트</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div th:each="project : ${projects}">
+        <div class="my-3">
+            프로젝트 번호 : <span th:text="${project.projectNo}"></span><br>
+            프로젝트명 : <span th:text="${project.name}"></span><br>
+            생성일 : <span th:text="${project.createdAt}"></span><br>
+        </div>
+    </div>
+<div>
+    <h1>
+        <a href="/projects/register">프로젝트 등록</a>
+    </h1>
+</div>
+</body>
+</html>
